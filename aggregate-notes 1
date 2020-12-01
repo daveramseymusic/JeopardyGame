@@ -25,6 +25,29 @@ this is the slower way:
 for chunk  in list_of_lists:
     everything = everything + chunk
 
+#write your own length function using a for loop to run throught the letters in a string:
+
+name = 'donald'
+
+def get_length(word):
+  x=0
+  for letter in word:
+    x += 1
+  return x
+
+print(get_length(name))
+
+
+#function to find if a letter is inside a string:
+def letter_check(word, letter):
+  for character in word:
+    if character == letter:
+      return True
+  return False
+
+
+
+
 
 # How to sort a list or tuple that is made up of lists and sort by a specific part of the smaller lists contained inside the larger list.
 aka - "a complex object"
@@ -37,6 +60,16 @@ aka - "a complex object"
 ... ]
 >>> sorted(student_tuples, key=lambda student: student[2])   # sort by age
 [('dave', 'B', 10), ('jane', 'B', 12), ('john', 'A', 15)]
+
+
+#create a function that returns the first 3 of the first name with the first three of the last name
+first_name = "Julie"
+last_name = "Blevins"
+
+def account_generator(first_name,last_name):
+  account = first_name[:3] + last_name[:3]
+  return account
+
 
 
 
@@ -71,6 +104,8 @@ col_one_list = df['column_name1'].tolist()
 '\t' Horizontal Tab
 use 
 chorus_lines = smooth_chorus.split('\n')
+
+ #By adding a backslash in front of the special character we want to escape, \", we can include it in a string.
 
 ## Print notes
 #how to print with a line inserted:
@@ -333,7 +368,14 @@ variable = df.index[-1]
 
 #how to strip dataframe column headers or column names.  nifty way to clean up headers quickly:
 #clean 
-#
+
+#How to append df.columns using lists and for loops:
+
+list = nyt_filtered_san_diego.columns #make save all columns or column names into one list
+listn =  [x + '_san_diego' for x in list] #add the same thing to each column name
+nyt_filtered_san_diego.columns = listn #resave df.columns as your new list
+
+
 ## jeopardy.columns = jeopardy.columns.str.strip().str.lower().str.replace(' ', '_').str.replace('(', '').str.replace(')', '')
 
 # jeopardy = jeopardy.rename(columns={' air_date':'air_date',' round':'round',' category':'category',' value': 'value',' question': 'question', ' answer': 'answer'})
@@ -1102,6 +1144,7 @@ nyt_pivot[['tarrant','philadelphia','san_diego','douglas']].apply(pd.to_numeric,
 # for col in ['product1','product2','product3','product4','Total']:
 #     Tracker_sample[col] = pd.to_numeric(Tracker_sample[col],errors='coerce').fillna(0)
 
+
 #create a test lambda:
 tarrant_df['test'] = tarrant_df.iloc[1:,2].apply(lambda x: x + 1)
 
@@ -1575,6 +1618,8 @@ sqlite_connection.close()
 ##
 using list comprehension in dataframes: https://chrisalbon.com/python/data_wrangling/pandas_list_comprehension/
 
+#great place to see string manipulations: https://docs.python.org/3/library/string.html
+
 
 As list comprehension
 # Subtract 1 from row, for each row in df.year
@@ -1588,6 +1633,14 @@ next_year = []
 for row in df['year']:
     # Add 1 to the row and append it to next_year
     next_year.append(row + 1)
+#nside password_generator create a for loop that iterates through the indices username by going from 0 to len(username).
+#use a for loop to move the last letter of a string to the front (pretty good idea uing range that starts on -1)
+def password_generator(user_name):
+    password = ""
+    for i in range(0, len(user_name)):
+        password += user_name[i-1]
+    return password
+
 
 # Create df.next_year
 df['next_year'] = next_year
