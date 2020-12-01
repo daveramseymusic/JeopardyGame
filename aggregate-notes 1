@@ -1,0 +1,1659 @@
+
+
+
+To stop the running code: use shortcut Ctrl+Alt+M. or press F1 and then select/type Stop Code Run.
+
+
+
+#Use zip() to subtract two lists
+list1 = [2, 2, 2]
+list2 = [1, 1, 1]
+difference = [] initialization of result list.
+zip_object = zip(list1, list2)
+for list1_i, list2_i in zip_object:
+difference. append(list1_i-list2_i) append each difference to list.
+print(difference)
+
+
+Making lists is faster this way:
+everything = []
+for chunk in list_of_lists:
+    everything.extend(chunk)
+
+this is the slower way:
+
+for chunk  in list_of_lists:
+    everything = everything + chunk
+
+
+# How to sort a list or tuple that is made up of lists and sort by a specific part of the smaller lists contained inside the larger list.
+aka - "a complex object"
+#A common pattern is to sort complex objects using some of the object’s indices as keys. For example:
+>>>
+>>> student_tuples = [
+...     ('john', 'A', 15),
+...     ('jane', 'B', 12),
+...     ('dave', 'B', 10),
+... ]
+>>> sorted(student_tuples, key=lambda student: student[2])   # sort by age
+[('dave', 'B', 10), ('jane', 'B', 12), ('john', 'A', 15)]
+
+
+
+#unpacking tuples:
+#simple version
+t= (0,1,3)  or t = 0,1,3
+x, y, z = t
+
+#(some dude)I prefer a list comprehension with a self-documenting tuple unpacking:
+
+[x for x,y in training_data]
+Complete program:
+training_data=[(1.5, 11), (2.5, 22), (7.5, 77)]
+training_data_x = [x for x,y in training_data]
+print(training_data_x)
+
+#cool list comprehension to have decimals:
+possible_ms = [m * 0.1 for m in range(-100, 101)]
+
+#cool way to use range to make x_values are the same as your list of months?:
+months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+range(len(months))
+works great for plots: x_values = range(len(months))
+
+#for making a list from a df column
+col_one_list = df['column_name1'].tolist()
+
+
+# Splitting strings:
+
+'\n' Newline
+'\t' Horizontal Tab
+use 
+chorus_lines = smooth_chorus.split('\n')
+
+## Print notes
+#how to print with a line inserted:
+print('The word "computer" was used in Jeopardy questions: ' + '\n' + str(ninties_filtered_questions.answer.count()) + ' times in the 1990s' +'\n' + str(oughts_filtered_questions.answer.count()) + ' times in the 2000s' )
+#this works to print two data frames at the same time. not mergedd:
+print(df_1, df_2)
+
+#useful:  .upper(), .lower(), .title(), .split(), .join(), and .format(), and .find()
+.upper(), .title(), and .lower() adjust the casing of your string.
+.split() takes a string and creates a list of substrings.
+.join() takes a list of strings and creates a string.
+.strip() cleans off whitespace, or other noise from the beginning and end of a string.
+.replace() replaces all instances of a character/string in a string with another character/string.
+.find() searches a string for a character/string and returns the index value that character/string is found at.
+.format() and f-strings allow you to interpolate a string with variables.
+#using .lower()
+df['x'].str.lower()  
+#or this works if its already a string
+df.['x'] = df['x'].lower()
+
+-
+##How do we use the Python string formatters %d and %f?
+Answer
+In Python, string formatters are essentially placeholders that let us pass in different values into some formatted string.
+
+The %d formatter is used to input decimal values, or whole numbers. If you provide a float value, it will convert it to a whole number, by truncating the values after the decimal point.
+
+For example,
+
+"print %d" % (3.78) 
+# This would output 3
+
+num1 = 5
+num2 = 10
+"%d + %d is equal to %d" % (num1, num2, num1 + num2)
+# This would output 
+# 5 + 10 is equal to 15
+The %f formatter is used to input float values, or numbers with values after the decimal place. This formatter allows us to specify a number of decimal places to round the values by.
+
+For example,
+
+number = 3.1415
+print "%f" % number
+# You might see this output 3.1415000,
+# due to how the float values are stored
+
+print "%.3f" % number
+# 3.142
+# When specifying to a number of decimal places
+# it will round up if the next digit value is >= 5
+
+##Histogram:
+The histogram above, for example(simple 10bar one), was created with the following code:
+
+plt.hist(dataset) 
+plt.show()
+If we want more than 10 bins, we can use the keyword bins to set how many bins we want to divide the data into. The keyword range selects the minimum and maximum values to plot. For example, if we wanted to take our data from the last example and make a new histogram that just displayed the values from 66 to 69, divided into 40 bins (instead of 10), we could use this function call:
+
+plt.hist(dataset, range=(66,69), bins=40)
+
+-
+#how to make 2 histograms so that you can see where they overlap:
+alpha between 0 and 1 is the opacity
+
+plt.hist(a, range=(55, 75), bins=20, alpha=0.5)
+plt.hist(b, range=(55, 75), bins=20, alpha=0.5)
+This would make both histograms visible on the plot:
+
+use the keyword histtype with the argument 'step' to draw just the outline of a histogram:
+
+plt.hist(a, range=(55, 75), bins=20, histtype='step')
+plt.hist(b, range=(55, 75), bins=20, histtype='step')
+
+Another problem we face is that our histograms might have different numbers of samples, making one much bigger than the other. We can see how this makes it difficult to compare qualitatively, by adding a dataset b with a much bigger size value:
+
+a = normal(loc=64, scale=2, size=10000)
+b = normal(loc=70, scale=2, size=100000)
+
+plt.hist(a, range=(55, 75), bins=20)
+plt.hist(b, range=(55, 75), bins=20)
+plt.show()
+The result is two histograms that are very difficult to compare:different_hist
+
+To solve this, we can normalize our histograms using normed=True. This command divides the height of each column by a constant such that the total shaded area of the histogram sums to 1.
+
+a = normal(loc=64, scale=2, size=10000)
+b = normal(loc=70, scale=2, size=100000)
+
+plt.hist(a, range=(55, 75), bins=20, alpha=0.5, normed=True)
+plt.hist(b, range=(55, 75), bins=20, alpha=0.5, normed=True)
+plt.show()
+
+Now, we can more easily see the differences between the blue set and the orange set:normalized_hist
+
+
+
+--
+
+
+
+
+
+##Jeopardy filtering and lowercasing using all()
+ # Filtering a dataset by a list of words
+
+def filter_data(data, words):
+  #lowercase all words in the list of words as well as the questions. Return true if all of the words in the 
+    list appear in the question:
+  filter = lambda x: all(word.lower() in x.lower() for word in words)
+  # Applies the labmda function to the Question column and returns the rows where the function returned True
+  return data.loc[data["Question"].apply(filter)]
+
+#this is what 'all()' is predefined to do:
+def all(iterable):
+    for element in iterable:
+        if not element:
+            return False
+    return True
+
+
+
+#how can you run a script in the terminal through vs code
+you find the folder where it is. then type: python example.py   
+it will run the file and print what you need in the terminal
+
+#how can you make sure vs code is using the proper directory
+Use the termnal to go the the directory that has the files you'd like to work in.  type: code . 
+then press enter and it will open vscode in the directory you were looking for
+
+#to print a df you MUST us the print function.  .head() function does not work on its own.  
+
+#how to check what the data types are for each column
+print(df.dtypes)
+
+# Create a new list named double_nums by multiplying each number in nums by two. list comprehension
+nums = [4, 8, 15, 16, 23, 42]
+double_nums = [ i*2 for i in nums]
+
+#user range in list comprehension:
+nums = range(11)
+squares = [ i ** 2 for i in nums] 
+
+#good way to get lenght of strings
+names = ["Elaine", "George", "Jerry", "Cosmo"]
+lengths = [len(i) for i in names]
+
+#using the NOT operator to flip booleans this is for a list called booleans
+booleans = [True, False, True]
+opposite = [not i for i in booleans]
+
+#you can do this other boolean statements too:
+greater_than_two = [ i > 2 for i in nums]
+
+# how to create new_list will now contain the sum of each sub-list.
+original_list = [[1, 2], [3, 4],  [5, 6]]
+new_list = [item1 + item2 for (item1, item2) in original_list]
+
+#Create a new list named first_character that contains the first character from every name in the list names
+names = ["Elaine", "George", "Jerry", "Cosmo"]
+first_character = [i[0] for i in names]
+
+#using zip funciton in a list to divide separate lists together
+a = [1.0, 2.0, 3.0]
+b = [4.0, 5.0, 6.0]
+quotients = [j/i for (i,j) in zip(a,b)]
+
+#Create a new list named opposite that contains the opposite boolean for each element in the list booleans.
+booleans = [True, False, True]
+opposite = [not i for i in booleans]
+
+
+
+### Data Frames ###
+
+
+#Early pandas stuff
+# Ways of creating a Pandas DataFrame
+# Passing in a dictionary:
+
+# set the column width max so that you can see the entire cell instead of trunkated.  othewise set it to 20 or something
+pd.set_option('display.max_colwidth', -1)
+
+data = {'name':['Anthony', 'Maria'], 'age':[30, 28]}
+df = pd.DataFrame(data)
+
+# Passing in a list of lists:
+data = [['Tom', 20], ['Jack', 30], ['Meera', 25]]
+df = pd.DataFrame(data, columns = ['Name', 'Age'])
+
+# Reading data from a csv file:
+df = pd.read_csv('students.csv')
+
+#how do would you FILTER OUT all of the rows in df data frame "experimental group" so that you create a DF called a_clicks with only rows in experimental group A
+
+b_clicks = ad_clicks[ad_clicks.experimental_group =='B']
+        #or to filter by column comparison
+crushing_it = sales_vs_targets[sales_vs_targets.revenue > sales_vs_targets.target]
+
+#filter out all states and counties I want to use for covid df use the example just below this line:
+# df.query('col1 <= 1 & 1 <= col1'):
+nyt_filtered = nyt.query('state == "texas" or state == "pennsylvania" or state == "colorado" or state == "california"')
+nyt_filtered = nyt_filtered.query('county == "tarrant" or county == "philadelphia" or county == "san_diego" or county == "douglas"')
+
+nyt_filtered = nyt_filtered.reset_index()
+
+
+
+# to filter and sort use this:
+nonunique_a = unique_a[unique_a.question > 24].sort_values(by='question',ascending=False)
+roup
+# to access or get the last element in a dataframe df
+df["column"].iloc[-1]
+
+# A function to find the unique answers of a set of data (instead of filtering)
+def get_answer_counts(data):
+    return data["Answer"].value_counts()
+
+##how do you turn one element fromm a df into a variable.
+    #Choose row and column of element
+df2 = df.loc[(df.column1 == 'row_i_like'), ['column_i_like']]
+    #use .sum() to turn it into an integer
+variable = df.column_i_like.sum()
+
+# Specifying each value in the new column:
+df['newColumn'] = [1, 2, 3, 4]
+
+# Setting each row in the new column to the same value:
+df['newColumn'] = 1
+
+# Creating a new column by doing a 
+# calculation on an existing column:
+df['newColumn'] = df['oldColumn'] * 5
+
+#new column from subraction of two other columns (simpler than it seems):
+all_data['time_to_purchase'] = all_data.purchase_time - all_data.visit_time
+
+
+#how do you rename dataframe columns?
+df = df.rename(column={'old_nam':'new_nam'})
+
+#Set the column labels to equal the values in the 2nd row (index location 1):
+df.columns = df.iloc[1] 
+
+## How to Handle datetime date Time Series Data with Ease:
+This is really good: https://pandas.pydata.org/pandas-docs/stable/getting_started/intro_tutorials/09_timeseries.html
+
+##from second covid iteration
+# #find the date 8 days ago day
+# from datetime import datetime, timedelta    
+# d = datetime.today() - timedelta(days=1) #timedelta(days=days_to_subtract)
+
+#make most recent column name and 1 week ago column name as variables to print out headers 
+#from covid project
+most_recent_date = deaths.columns[-1]
+two_week_ago_date = deaths.columns[-8]
+
+#from covid  
+#use this to create the last index name or row name as a variable. useful after simple pivot
+variable = df.index[-1]
+
+#how to strip dataframe column headers or column names.  nifty way to clean up headers quickly:
+#clean 
+#
+## jeopardy.columns = jeopardy.columns.str.strip().str.lower().str.replace(' ', '_').str.replace('(', '').str.replace(')', '')
+
+# jeopardy = jeopardy.rename(columns={' air_date':'air_date',' round':'round',' category':'category',' value': 'value',' question': 'question', ' answer': 'answer'})
+# jeopardy.rename(columns=lambda x: x.strip(), inplace=True)
+jeopardy.columns = [col.lstrip() for col in jeopardy.columns]
+# to turn all column headers to strings
+# jeopardy.columns = [str(i) for i in jeopardy.columns.values.tolist()]
+
+Trim leading space of column in pandas – lstrip()
+Trim trailing space of column in pandas – rstrip()
+Trim Both leading and trailing space of column in pandas – strip()
+strip all the white space of column in pandas
+
+##check your column headers or names:
+print(df.columns)
+
+
+#ADD A NEW COLUMN with onto a df bassed off the df
+df['newColumn'] = df['oldColumn'] * 5
+
+#more complex version of the same gist. particularly weired because the pivot created columns that were headed by n
+clicks_pivot['percent_clicked'] = \
+   clicks_pivot[True] / \
+   (clicks_pivot[True] + 
+    clicks_pivot[False])
+
+#cool lambda thing is that you can save a lambda like a function to a single variable name:
+
+long_string = lambda str: len(str) > 12
+
+print long_string("short")
+print long_string("photosynthesis")
+
+#for LAMBDAS use this for creating NEW COLUMN
+# Applying to a row requires it to be called on the entire DataFrame.
+# WAIT!! I think this is actually wrong.  
+df['newColumn'] = df.apply(lambda row:      
+  row['column1'] * 1.5 + row['column2'],
+  axis=1)
+
+#this lambda works though:
+
+
+#interesting way to next if then statments into a lambda
+nested_if_then_lambda = lambda x: '90s' if x<2 else (x**2 if x<4 else x+10)
+
+#Create a column using a lambda on the one column with if then else 
+#add prices to each coffee item_base_price
+price_maker = lambda x: 18 if (x == 'ardi' or x =='yirgz') else 15
+fake_box['item_base_price'] = fake_box.item_name.apply(price_maker)
+print(fake_box)
+
+
+#If the column ad_click_timestamp is not null, then someone actually clicked on the ad that was displayed.
+#Create a new column called is_click, which is True if ad_click_timestamp is not null and False otherwise.
+
+ad_clicks['is_click'] = ~ad_clicks.ad_click_timestamp.isnull()
+#
+#The ~ is a NOT operator, and isnull() tests whether or not the value of ad_click_timestamp is null.
+#find how many are null in a particular column note you can use len to count number of rows
+print(len(df[df.column1.isnull()]))
+
+
+#list of pandas agregate functions:
+
+df.columnName.sum()
+df.columnName.mean() # Average of all values in column
+df.columnName.std() # Standard deviation of column
+df.columnName.median() # Median value of column
+df.columnName.max() # Maximum value in column
+df.columnName.min() # Minimum value in column
+df.columnName.count() # Number of values in column
+df.columnName.nunique() # Number of unique values in column
+df.columnName.unique() # List of unique values in column
+
+#to change a whole column to a float use this:
+df['DataFrame Column'] = df['DataFrame Column'].astype(float)
+
+#way to clean a column of its Na values like Nan or Nat used in covid:
+#turn Nan or in the float format into 0's 
+#  df['DataFrame Column'] = df['DataFrame Column'].fillna(0)
+death_merge.tarrant_nyt_deaths = death_merge.tarrant_nyt_deaths.fillna(0)
+
+#cool way to clean all the numbers or strings first to make them all floats:
+df = df_orig.copy()
+
+#excellent catch all clean up solution from Practical Business Python.com
+jeopardy['value'] = jeopardy['value'].apply(lambda x: x.replace('$', '').replace(',', '').replace('None','0')
+                                if isinstance(x, str) else x).astype(float)
+print(jeopardy.dtypes)
+
+#how to detect if something is datetime try using this.  will be boolean so use in a lambda
+
+ok so for some reason this worked:
+isinstance(x, datetime)  NOT this: isinstance(now, datetime.datetime)   
+
+#This was the equation that worked:
+c_cov.iloc[:,1] = c_cov.iloc[:,1].apply(lambda x: x.parse()
+                                if isinstance(x, datetime) else x)
+
+
+##use the .apply() function to run a function through each element in a column:
+
+def filter_desktop_mobile(platform):
+    if platform in mobile:
+        return 'Mobile'
+    elif platform == 'Desktop':
+        return 'Desktop'
+    else:
+        return 'Not Known'
+
+data['platform'].apply(filter_desktop_mobile)
+
+
+
+##using .apply() for multiple columns and specific rows:
+Selecting multiple columns
+To select multiple columns, you can pass a list of column names you want to select into the square brackets:
+
+#here is how you can quickly create a list of your column names
+note: you must trascribe col names to a list.  I don't think you can just use "df.columns[:]" by itself
+col_names = df.columns[:]
+
+
+
+
+
+# np.percentile can calculate any percentile over an array of values
+#note: "np." is simply part of the 'command' so just copy it in
+high_earners = df.groupby('category').wage
+    .apply(lambda x: np.percentile(x, 75))
+    .reset_index()
+
+# grouping multiple colums aka performing aggregate :
+df.groupby(['Location', 'Day of Week'])['Total Sales'].mean().reset_index()
+
+#other example using id works well for "count."
+shoe_counts = orders.groupby(['shoe_type', 'shoe_color']).id.count().reset_index()
+
+#super simple pivot  using .set_index This will move your entire table using a specific column as your index. 
+#used in covid
+df = df.set_index('column_name_to_use_as_index').T
+dp = tarrant_df.set_index('county_name').T
+
+#turns out that is called transposing and you can use these instead:
+df_t = df.T
+df_tr = df.transpose()
+#more details here: https://note.nkmk.me/en/python-pandas-t-transpose/
+
+
+
+#for pivoting aka rearranging tables(dataframes(df)):
+df.pivot(columns='ColumnToPivot',
+         index='ColumnToBeRows',
+         values='ColumnToBeValues')
+
+
+#specific example using pivot :
+# First use the groupby statement:
+unpivoted = df.groupby(['Location', 'Day of Week'])['Total Sales'].mean().reset_index()
+# Now pivot the table
+pivoted = unpivoted.pivot(
+    columns='Day of Week',
+    index='Location',
+    values='Total Sales').reset_index()
+
+#to do this all together with a print statement do this(formatted super clear):
+print(df
+    .groupby(['Location', 'Day of Week'])['Total Sales']\
+    .mean()\
+    .reset_index()\
+    .pivot(\
+        columns='Day of Week',
+        index='Location',
+        values='Total Sales')
+    .reset_index()
+    )
+
+#other pivot example because your using the id.  ALSO 
+shoe_counts = orders.groupby(['shoe_type', 'shoe_color']).id.count().reset_index()
+
+shoe_counts_pivot = shoe_counts.pivot(columns='shoe_color',
+         index='shoe_type',
+         values='id').reset_index()
+
+ # to print only 10 lines in pandas use
+ print(user_visits.head(10))         
+
+ 
+#How to sort a column in descending order or df based on one column
+
+df2 = df.sort_values(by='column1',ascending = False)
+# different sorting from the pandas site:
+df.sort_values(by='col1', ascending=False)
+df.sort_values(by='col1', ascending=False, na_position='first')
+df.sort_values(by=['col1', 'col2'])
+df.sort_values(by=['col1'])
+ 
+nonunique_a = nonunique_a.sort_values(by=['question'],ascending=False)
+
+#this is the sytax to print a sort a single column with a head to check something
+print(jeopardy.sort_values(by=['air_date']).air_date.head(3))
+
+This helped print from a .sort_values() when I kept getting This error: AttributeError: 'function' object has no attribute 'sort_values':
+df.groupby('group')['id'].count().sort_values(ascending=False)
+
+
+#using orderby or with ascending = false is also useful:
+nonunique_a = unique_a[unique_a.question > 24].sort_values(by='question',ascending=False)
+
+
+
+
+##modulo lambda to narrow any date into its decade:
+#first clean data
+    #make all dates liste  as strings into integers:
+jeopardy['air_date'] = jeopardy['air_date'].apply(lambda x: x.replace('$', '')\
+                                                        .replace(',', '')\
+                                                        .replace('None','0')\
+                                                        .replace('-','')
+                                            if isinstance(x, str) else x).astype(int)
+    
+    #alternative cleaning for 'value' column
+    #Fixes value column to be straight floats with no $'s commas or "None"
+df['value_float'] = df.value.apply(lambda x: float(x[1:].replace(',','')) if x != 'None' else 0)
+
+
+#then make all dates reduce to decade
+jeopardy['decade'] = jeopardy.apply(lambda row:      
+  ((row['air_date']-(row['air_date'] % 100000))/10000),
+  axis=1)
+
+    ##Add datetime column instead of string 'air_date'
+
+    #must 'import datetime'
+    import datetime as dt
+    df['date'] = df.air_date.apply(lambda x: pd.to_datetime(x))
+    #use it later like this
+    filtered_by_computer_90s = filtered_by_computer[(filtered_by_computer.date > datetime.datetime(1990, 1, 1)) & (filtered_by_computer.date < datetime.datetime(1999, 12, 31))]
+    
+    #if looking to round dates to the 1st of the month do this:
+    otb['month/year'] = pd.to_datetime(otb['month/year']) - pd.offsets.MonthBegin(0)
+    #if looking to round up, do this
+    otb['month/year'] = pd.to_datetime(otb['month/year']) + pd.offsets.MonthBegin(0)
+
+    #interesting datetime or date or time way to import csv files:
+        import codecademylib
+        import pandas as pd
+
+        visits = pd.read_csv('visits.csv',
+                                parse_dates=[1])
+        checkouts = pd.read_csv('checkouts.csv',
+                                parse_dates=[1])
+    #this allows you to use this time date subtraction later after merging the DataFrames:
+    v_to_c['time'] = v_to_c.checkout_time - \
+                 v_to_c.visit_time
+    #We can use pandas parse_dates to parse columns as datetime. 
+    You can either use parse_dates = True or parse_dates = [‘column name’]
+
+
+ninties = jeopardy[jeopardy.decade == 1990.0]
+oughts = jeopardy[jeopardy.decade == 2000.0]
+
+#here I use the previouse data_filter() function
+ninties_filtered_questions = data_filter(ninties, my_words)
+oughts_filtered_questions = data_filter(oughts, my_words)
+
+##usint input
+>>> s = input('--> ')  
+--> Monty Python's Flying Circus
+>>> s  
+"Monty Python's Flying Circus"
+
+
+#how to select the last few columns or filter the specific number of columns in a df
+ y = dataframe[dataframe.columns[-3:]]
+
+## from covid project
+#prints last 7 column entries
+print(tarrant_df.iloc[0,-7:])
+#prints the last column entry. note: .iloc[0,-1] only prints 2nd to last entry for like NO REASON
+print(tarrant_df.iloc[0,-1:])
+
+#anothr way to look at particualar data that does not use iloc is: this will give you what is 10 rows down
+c_cov[1][10]
+or 
+c_cov['column_name'][10]
+
+
+#using .loc or .iloc for index
+# Single selections using iloc and DataFrame
+# Rows:
+data.iloc[0] # first row of data frame (Aleshia Tomkiewicz) - Note a Series data type output.
+data.iloc[1] # second row of data frame (Evan Zigomalas)
+data.iloc[-1] # last row of data frame (Mi Richan)
+# Columns:
+data.iloc[:,0] # first column of data frame (first_name)
+data.iloc[:,1] # second column of data frame (last_name)
+data.iloc[:,-1] # last column of data frame (id)
+
+#or maybe this
+The Pandas loc indexer can be used with DataFrames for two different use cases:
+
+a.) Selecting rows by label/index
+b.) Selecting rows with a boolean / conditional lookup
+The loc indexer is used with the same syntax as iloc: data.loc[<row selection>, <column selection>] .
+
+#other .loc or .iloc examples:
+
+# select all rows with a condition
+data.loc[data.age >= 15]
+# select with multiple conditions
+data.loc[(data.age >= 12) & (data.gender == 'M')]
+#range of rows or a slice of the data
+data.loc[1:3]
+
+# ues .loc to select few columns with a condition
+data.loc[(data.age >= 12), ['city', 'gender']]
+
+
+# Select one row randomaly using sample() 
+# without give any parameters 
+df.sample() 
+if using a column:
+df.columnname.sample() 
+
+
+## Merging two tables(inner merge?):
+new_df = pd.merge(orders, customers)
+
+big_df = orders.merge(customers)\
+    .merge(products)
+
+#easy way to merge DataFrames is to change the column names of one of the DataFrames:
+    pets_owners = pd.merge(
+        pets,
+        ownner.rename(columns = {'id' : 'owner_id})
+    )
+
+#We could use the keywords left_on and right_on to specify which columns we want to perform the merge on. 
+In the example below, the “left” table is the one that comes first (orders), and the “right” table is the one that comes
+second (customers). This  syntax says that we should match the customer_id from orders to the id in customers.
+
+pd.merge(
+    orders,
+    customers,
+    left_on='customer_id',
+    right_on='id')
+
+
+#merge with suffix
+pd.merge(
+    orders,
+    customers,
+    left_on='customer_id',
+    right_on='id',
+    suffixes=['_order', '_customer']
+
+you can perform a merge on one column, or on multiple specified columns, by passing in a list 
+of the column names for each dataframe.
+
+#When listing multiple column names, it will only return rows for which all the column values match. 
+Furthermore, the number of columns listed must match, and the order they are listed will matter.
+# This will match the values for 
+# column "a" with "c" 
+# and column "b" with "d".
+
+pd.merge(
+  df1,
+  df2,
+  left_on=["a", "b"],
+  right_on=["c", "d"]
+)
+
+#outer merge
+pd.merge(company_a, company_b, how='outer')
+
+#possible way to left merge:
+df1.merge(df2, how='left')
+
+#slick way of merging multiple df in one line
+df1.merge(df2, how='left')\
+   .merge(df3, how='left')
+
+#Concatenate DataFrames
+#When we need to reconstruct a single DataFrame from multiple smaller DataFrames, we can use the method 
+# This method only works if all of the columns are the same in all of the DataFrames.
+pd.concat([df1, df2, df2, ...])
+
+
+#how to drop duplicate rows in a dataframe df at least duplicate user id or the same entries
+.drop_duplicates(subset='user_id')
+
+#also this way to check duplicates aka the number of unique or .nunique()
+print(len(cart))  # 400
+print(  )  # 348
+# There are 52 duplicates.
+
+#other cool way to count duplicates when there are multiples of different entries:
+my_dict = {i:MyList.count(i) for i in MyList}
+
+>>> print my_dict     #or print(my_dict) in python-3.x
+{'a': 3, 'c': 3, 'b': 1}
+
+
+#drop method for dropping a column:
+df.drop(subset = ['column_name'], axis=1)
+#if you'd like it to perminently affect data use:
+df.drop(subset = ['column_name'], axis=1, inplace=true)
+        ## might not need'subset = ' or brackets if only dropping entire columns or if axis=1?  I'm not sure yet
+so whatever commmand you have to deal with the data it is o
+#drop nan or missing values
+df.dropna(how='any')
+
+
+
+  b_pivot = b_clicks.groupby(['utm_source', 'is_click']).user_id.count().reset_index()\
+  .pivot(columns='is_click',
+        index='utm_source',
+         values='user_id')\
+  .reset_index()
+
+
+
+## importing matplotlib
+from matplotlib import pyplot as plt
+
+#interesting bit on import and importing
+import module_name or import module_name as alias import a whole module (in your case, pandas.py)
+while "from" will import a function or a class of a module. So matplotlib is the module, and pyplot is very likely a class.
+using different import styles has consequences.
+
+#create simple line graph
+x_values = [0, 1, 2, 3, 4]
+y_values = [0, 1, 4, 9, 16]
+plt.plot(x_values, y_values)
+plt.show()
+
+
+#if x and y do not have the same number of elements you can maybe do this:
+If using the Numpy library, you can obtain the shape of an Array using the .shape property.
+
+Items = np.array([1, 2, 3, 4, 5])
+Items.shape # (5, ) - which means a 1D array of 5 elements
+
+#change the line styles multiple lines
+plt.plot(days, money_spent, color='green')
+plt.plot(days, money_spent_2, color='#AAAAAA')
+
+# Dashed:
+plt.plot(x_values, y_values, linestyle='--')
+# Dotted:
+plt.plot(x_values, y_values, linestyle=':')
+# No line:
+plt.plot(x_values, y_values, linestyle='')
+
+# A circle:
+plt.plot(x_values, y_values, marker='o')
+# A square:
+plt.plot(x_values, y_values, marker='s')
+# A star:
+plt.plot(x_values, y_values, marker='*')
+
+all the line styles here : https://matplotlib.org/api/lines_api.html
+
+#for x= 0 to 3 and for y = 2 to 5:
+x = [0, 1, 2, 3, 4]
+y = [0, 1, 4, 9, 16]
+plt.plot(x, y)
+plt.axis([0, 3, 2, 5])
+plt.show()
+
+#naming labeling x an y axis
+hours = [9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
+happiness = [9.8, 9.9, 9.2, 8.6, 8.3, 9.0, 8.7, 9.1, 7.0, 6.4, 6.9, 7.5]
+plt.plot(hours, happiness)
+plt.xlabel('Time of day')
+plt.ylabel('Happiness Rating (out of 10)')
+plt.title('My Self-Reported Happiness While Awake')
+plt.show()
+
+#using subplots sub plots
+# Data sets
+x = [1, 2, 3, 4]
+y = [1, 2, 3, 4]
+
+# First Subplot
+plt.subplot(1, 2, 1)
+plt.plot(x, y, color='green')
+plt.title('First Subplot')
+
+# Second Subplot
+plt.subplot(1, 2, 2)
+plt.plot(x, y, color='steelblue')
+plt.title('Second Subplot')
+
+# Display both subplots
+plt.show()
+
+
+#sub plots I I 
+plt.subplots_adjust() command. .subplots_adjust() has some keyword arguments that can move your plots within the figure:
+
+left — the left-side margin, with a default of 0.125. You can increase this number to make room for a y-axis label
+right — the right-side margin, with a default of 0.9. You can increase this to make more room for the figure, or decrease it to make room for a legend
+bottom — the bottom margin, with a default of 0.1. You can increase this to make room for tick mark labels or an x-axis label
+top — the top margin, with a default of 0.9
+wspace — the horizontal space between adjacent subplots, with a default of 0.2
+hspace — the vertical space between adjacent subplots, with a default of 0.2
+For example, if we were adding space to the bottom of a graph by changing the bottom margin to 0.2 (instead of the default of 0.1), we would use the command:
+
+plt.subplots_adjust(bottom=0.2)
+We can also use multiple keyword arguments, if we need to adjust multiple margins. For instance, we could adjust both the top and the hspace:
+
+plt.subplots_adjust(top=0.95, hspace=0.25)
+Let’s use wspace to fix the figure above:
+
+# Left Plot
+plt.subplot(1, 2, 1)
+plt.plot([-2, -1, 0, 1, 2], [4, 1, 0, 1, 4])
+
+# Right Plot
+plt.subplot(1, 2, 2)
+plt.plot([-2, -1, 0, 1, 2], [4, 1, 0, 1, 4])
+
+# Subplot Adjust
+plt.subplots_adjust(wspace=0.35)
+
+this also works
+plt.subplots_adjust(wspace=0.35, bottom=0.2
+
+plt.show()
+
+These are the position values loc accepts and how to use it:
+plt.legend(['parabola', 'cubic'], loc=6)
+plt.show()
+
+1 upper right
+2 upper left
+3 lower left
+4 lower right
+5  right
+6 center left
+7 center right
+8 lower center
+9 upper center
+10 center
+
+
+
+#label each line as you create it:
+plt.plot([0, 1, 2, 3, 4], [0, 1, 4, 9, 16],
+         label="parabola")
+plt.plot([0, 1, 2, 3, 4], [0, 1, 8, 27, 64],
+         label="cubic")
+plt.legend() # Still need this command!
+plt.show()
+
+
+#for modifying tic marks in specific sub plots in a figure
+ax = plt.subplot(1, 1, 1)
+
+Suppose we wanted to set our x-ticks to be at 1, 2, and 4. We would use the following code:
+
+ax = plt.subplot()
+plt.plot([0, 1, 2, 3, 4], [0, 1, 4, 9, 16])
+plt.plot([0, 1, 2, 3, 4], [0, 1, 8, 27, 64])
+ax.set_xticks([1, 2, 4])
+
+with y tics
+
+ax = plt.subplot()
+plt.plot([1, 3, 3.5], [0.1, 0.6, 0.8], 'o')
+ax.set_yticks([0.1, 0.6, 0.8])
+ax.set_yticklabels(['10%', '60%', '80%'])
+
+If your labels are particularly long, you can use the rotation keyword to rotate your labels by a specified number of degrees:
+ax.set_xticklabels(['Mercury', 'Venus', 'Earth', 'Mars', 'Jupiter', 'Saturn', 'Uranus', 'Neptune', 'Pluto'],
+rotation=30)
+
+Full bar graph made here:
+drinks = ["cappuccino", "latte", "chai", "americano", "mocha", "espresso"]
+sales =  [91, 76, 56, 66, 52, 27]
+ax = plt.subplot()
+plt.bar(range(len(drinks)), sales)
+ax.set_xticks(range(len(drinks)))
+ax.set_xticklabels(drinks)
+plt.show()
+
+#Math for double bar graphs:
+
+# China Data (blue bars)
+n = 1  # This is our first d ataset (out of 2)
+t = 2 # Number of datasets
+d = 7 # Number of sets of bars
+w = 0.8 # Width of each bar
+x_values1 = [t*element + w*n for element
+             in range(d)]
+
+# US Data (orange bars)
+n = 2  # This is our second dataset (out of 2)
+t = 2 # Number of datasets
+d = 7 # Number of sets of bars
+w = 0.8 # Width of each bar
+x_values2 = [t*element + w*n for element
+             in range(d)]
+
+
+#Double Bar example:
+drinks = ["cappuccino", "latte", "chai", "americano", "mocha", "espresso"]
+sales1 =  [91, 76, 56, 66, 52, 27]
+sales2 = [65, 82, 36, 68, 38, 40]
+
+# sales1 data (blue bars)
+n = 1  # This is our first dataset (out of 2)
+t = 2 # Number of datasets
+d = 6 # Number of sets of bars
+w = 0.8 # Width of each bar
+store1_x = [t*element + w*  for element
+             in range(d)]
+# plt.bar(range(len(days_in_year)),
+#         days_in_year)
+plt.bar(store1_x, sales1)
+
+# sales2 dat (orange bars)
+n = 2  # This is our second dataset (out of 2)
+t = 2 # Number of datasets
+d = 6 # Number of sets of bars
+w = 0.8 # Width of each bar
+
+store2_x = [t*element + w*n for element
+             in range(d)]
+plt.bar(store2_x, sales2)
+plt.show()
+
+
+
+#use to clear plots before new plot
+plt.close('all') 
+
+#to add a separate figure and change the size
+plt.figure(figsize=(4, 10))
+
+
+# Figure 2 save it
+plt.figure(figsize=(4, 10)) 
+plt.plot(x, parabola)
+plt.savefig('tall_and_narrow.png')
+
+For example, if the directory is a path within your current directory, you can save it like so,
+
+plt.savefig('subfolder/filename.png')
+
+
+
+
+
+#BAR CHART: Here is an example of how to make a bar chart using plt.bar to compare the number of days in a year on the different planets:
+days_in_year = [88, 225, 365, 687, 4333, 10756, 30687, 60190, 90553]
+plt.bar(range(len(days_in_year)),
+        days_in_year)
+plt.show()
+
+
+
+## how to download internet files through python used in covid project html csv:
+    import urllib.request
+
+    dls = "https://dshs.texas.gov/coronavirus/TexasCOVID19DailyCountyFatalityCountData.xlsx"
+    urllib.request.urlretrieve(dls, "test.xlsx")
+
+##convert xl or .xl or .xlsx to csv file
+data_xls = pd.read_excel('excelfile.xlsx', 'Sheet2', index_col=None)
+data_xls.to_csv('csvfile.csv', encoding='utf-8')
+
+
+
+#converting to datetime date and time used in covid project
+# overwriting data after changing format 
+data["Date"]= pd.to_datetime(data["Date"])
+
+##resets columns so some are now dates.
+#df.columns = df.columns[:1].tolist() + pd.to_datetime(df.columns[1:]).tolist()
+## use for days
+# df.columns = pd.to_datetime(df.columns).to_period('D')
+
+##Iteresting date datetime speed notes:
+def lookup(s):
+    """
+    This is an extremely fast approach to datetime parsing.
+    For large data, the same dates are often repeated. Rather than
+    re-parse these, we store all unique dates, parse them, and
+    use a lookup to convert all dates.
+    """
+    dates = {date:pd.to_datetime(date) for date in s.unique()}
+    return s.apply(lambda v: dates[v])
+
+to_datetime: 5799 ms
+dateutil:    5162 ms
+strptime:    1651 ms
+manual:       242 ms
+lookup:        32 ms
+Source: https://github.com/sanand0/benchmarks/tre
+
+
+
+#combined better is:
+c_cov.columns = c_cov.columns[:3].tolist() + pd.to_datetime(c_cov.columns[3:]).to_period('D').tolist()
+
+#cool way to change the header or columns names and get rid of the old row with the old header. covid useful:
+new_header = df.iloc[0] #grab the first row for the header
+df = df[1:] #take the data less the header row
+df.columns = new_header #set the header row as the df header
+
+
+d1 = datetime.date(2008, 3, 12)
+
+#all datetime date time function are liste here:
+https://pymotw.com/2/datetime/#:~:text=You%20can%20use%20datetime%20to,date%20to%20produce%20another%20date.
+
+
+#how to convert columns from string to integer:
+ou have three main options for converting types in pandas:
+
+to_numeric() - provides functionality to safely convert non-numeric types (e.g. strings) to a suitable numeric type.
+ (See also to_datetime() and to_timedelta().)
+astype() - convert (almost) any type to (almost) any other type (even if it's not necessarily sensible to do so).
+ Also allows you to convert to categorial types (very useful).
+infer_objects() - a utility method to convert object columns holding Python objects to a pandas type if possible.
+
+Read on for more detailed explanations and usage of each of these methods.
+
+1. to_numeric()
+The best way to convert one or more columns of a DataFrame to numeric values is to use pandas.to_numeric().
+
+This function will try to change non-numeric objects (such as strings) into integers or floating point numbers as appropriate.
+
+#really good stack-overflow explanation:
+https://stackoverflow.com/questions/15891038/change-data-type-of-columns-in-pandas/44536326#:~:text=The%20best%20way%20to%20convert%20one%20or%20more%20columns%20of,floating%20point%20numbers%20as%20appropriate.
+
+
+# convert Series
+my_series = pd.to_numeric(my_series)
+
+# convert column "a" of a DataFrame
+df["a"] = pd.to_numeric(df["a"])
+
+#to make things an integer
+pd.to_numeric(s, downcast='integer')
+#to make them float:
+pd.to_numeric(s, downcast='flaot')
+
+#apparently this can also change things from float to integer?
+# df = df.astype({"a": int, "b": complex})
+
+#this is what I used, but for some reason it would not work on the new 'test' column. it compiled,but did not 'test':
+#make data integers:
+tarrant_df.iloc[1:,2] = pd.to_numeric(tarrant_df.iloc[1:,2], downcast='integer')
+
+## Used this to turn multiple columns from strings to numeric at once (note: for some reason an error keeps coming up about pasting something on a slice?)
+# Tracker_sample[['product1','product2','product3','product4','Total']].apply(pd.to_numeric, errors='coerce').fillna(0)
+nyt_pivot[['tarrant','philadelphia','san_diego','douglas']].apply(pd.to_numeric, errors='coerce')
+
+#This is for loop worked better and I kept it in the covid thing to turn strings to numerics:
+# note: the for loop allows for the '.fillna(0)' to work. while he example above cannot use .fillna(0)
+# for col in ['product1','product2','product3','product4','Total']:
+#     Tracker_sample[col] = pd.to_numeric(Tracker_sample[col],errors='coerce').fillna(0)
+
+#create a test lambda:
+tarrant_df['test'] = tarrant_df.iloc[1:,2].apply(lambda x: x + 1)
+
+
+really good index for dataframe spot on how to search and whatnot or reset index:
+https://www.kaggle.com/residentmario/indexing-selecting-assigning#Manipulating-the-index
+
+#useful for printing out index number used in covid:
+most_recent_date = tarrant_df.index[-1]
+
+#worked for printing bar graph of all covid deaths. using date time as x axis. doesn't work like this unless using negatives(ie -150) because the first date is  off.
+fig, ax = plt.subplots(figsize=(10, 6))
+ax.xaxis.set_major_formatter(mdates.DateFormatter('%m-%d'))
+ax.bar(tarrant_df.iloc[-150:,1], tarrant_df.iloc[-150:,2], width=0.3, align='center')
+
+
+#great pandas examples for indexing with python like .loc and .iloc
+https://pandas.pydata.org/pandas-docs/version/0.13.1/indexing.html
+
+
+How to change an element in place in a column using if then:
+https://datatofish.com/if-condition-in-pandas-dataframe/
+import pandas as pd
+
+numbers = {'set_of_numbers': [1,2,3,4,5,6,7,8,9,10,0,0]}
+df = pd.DataFrame(numbers,columns=['set_of_numbers'])
+print (df)
+
+df.loc[df['set_of_numbers'] == 0, 'set_of_numbers'] = 999
+df.loc[df['set_of_numbers'] == 5, 'set_of_numbers'] = 555
+
+print (df)
+
+
+
+
+##interesting simple way to pull data from a csv and have a dates column with adjustable x ticks
+#came from this website: https://scentellegher.github.io/programming/2017/05/24/pandas-bar-plot-with-formatted-dates.html
+
+#import libraries
+import pandas as pd
+import matplotlib.pyplot as plt
+import matplotlib.dates as mdates
+%matplotlib inline
+
+#read data from csv
+data = pd.read_csv('data.csv', usecols=['date','count'], parse_dates=['date'])
+#set date as index
+data.set_index('date',inplace=True)
+
+#set ggplot style
+plt.style.use('ggplot')
+
+#plot data
+fig, ax = plt.subplots(figsize=(15,7))
+ax.bar(data.index, data['count'])
+
+#set ticks every week
+ax.xaxis.set_major_locator(mdates.WeekdayLocator())
+#format date
+ax.xaxis.set_major_formatter(mdates.DateFormatter('%b %d'))
+
+ax.set_title('Game of Thrones Wikipedia Page Views')
+ax.set_ylabel('Count')
+ax.set_xlabel('Date')
+
+
+#Interesting way to plot multiple subplots with a title in matplotlib 3.1.2
+import matplotlib.pyplot as plt
+import numpy as np
+
+
+def f(t):
+    s1 = np.cos(2*np.pi*t)
+    e1 = np.exp(-t)
+    return s1 * e1
+
+t1 = np.arange(0.0, 5.0, 0.1)
+t2 = np.arange(0.0, 5.0, 0.02)
+t3 = np.arange(0.0, 2.0, 0.01)
+
+
+fig, axs = plt.subplots(2, 1, constrained_layout=True)
+axs[0].plot(t1, f(t1), 'o', t2, f(t2), '-')
+axs[0].set_title('subplot 1')
+axs[0].set_xlabel('distance (m)')
+axs[0].set_ylabel('Damped oscillation')
+fig.suptitle('This is a somewhat long figure title', fontsize=16)
+
+axs[1].plot(t3, np.cos(2*np.pi*t3), '--')
+axs[1].set_xlabel('time (s)')
+axs[1].set_title('subplot 2')
+axs[1].set_ylabel('Undamped')
+
+plt.show()
+
+##How I actually add a Title to the figure over all the plots for covid:
+# Use pyplot.suptitle or Figure.suptitle:
+
+# import matplotlib.pyplot as plt
+# import numpy as np
+
+# fig=plt.figure()
+# data=np.arange(900).reshape((30,30))
+# for i in range(1,5):
+#     ax=fig.add_subplot(2,2,i)        
+#     ax.imshow(data)
+
+# fig.suptitle('Main title') # or plt.suptitle('Main title')
+# plt.show()
+
+
+##Error bars:
+If we wanted to show an error of +/- 2, we would add the keyword yerr=2 to our plt.bar command. 
+To make the caps wide and easy to read, we would add the keyword capsize=10:
+values = [10, 13, 11, 15, 20]
+yerr = 2
+plt.bar(range(len(values)), values, yerr=yerr, capsize=10)
+plt.show()
+
+If we want a different amount of error for each bar, we can make yerr equal to a list rather than a single number:
+
+values = [10, 13, 11, 15, 20]
+yerr = [1, 3, 0.5, 2, 4]
+plt.bar(range(len(values)), values, yerr=yerr, capsize=10)
+plt.show() 
+
+#How to do an error fill line aka a shade of error on a line graph matplotlib
+Here is an example of how we would display data with an error of 2:
+
+x_values = range(10)
+y_values = [10, 12, 13, 13, 15, 19, 20, 22, 23, 29]
+y_lower = [8, 10, 11, 11, 13, 17, 18, 20, 21, 27]
+y_upper = [12, 14, 15, 15, 17, 21, 22, 24, 25, 31]
+
+plt.fill_between(x_values, y_lower, y_upper, alpha=0.2) #this is the shaded error
+plt.plot(x_values, y_values) #this is the line itself
+plt.show()
+
+
+In order to correctly add or subtract from a list, we need to use list comprehension:
+y_lower = [i - 2 for i in y_values]
+
+
+##Pie Chart! In Matplotlib, you can make a pie chart with the command plt.pie, passing in the values 
+you want to chart:
+
+budget_data = [500, 1000, 750, 300, 100]
+
+plt.pie(budget_data)
+plt.axis('equal')
+plt.show()
+
+When we make pie charts in Matplotlib, we almost always want to set the axes to be equal to fix this issue. 
+To do this, we use plt.axis('equal'), 
+which results in a chart like this: (a chart that looks better)
+
+
+Example with Legend:
+budget_data = [500, 1000, 750, 300, 100]
+budget_categories = ['marketing', 'payroll', 'engineering', 'design', 'misc']
+
+plt.pie(budget_data)
+plt.legend(budget_categories)
+
+
+One other useful labeling tool for pie charts is adding the percentage of the total that each slice occupies. 
+Matplotlib can add this automatically with the keyword autopct. We pass in string formatting instructions to 
+format the labels how we want. Some common formats are:
+
+'%0.2f' — 2 decimal places, like 4.08
+'%0.2f%%' — 2 decimal places, but with a percent sign at the end, like 4.08%. You need two consecutive percent signs because the first one acts as an escape character, so that the second one gets displayed on the chart.
+'%d%%' — rounded to the nearest int and with a percent sign at the end, like 4%.
+So, a full call to plt.pie might look like: ("pie chart with percentages inside pie and labels around it")
+
+plt.pie(budget_data,
+        labels=budget_categories,
+        autopct='%0.1f%%')
+
+--
+
+
+##using the percent change built in pandas function:
+percentages['percent_left'] = percentages.total.pct_change()
+
+#how to build your own data frame from dictionaries create new dataframe df :
+df_dic = {'question': ['1. What are you looking for?', "2. What's your fit?", '3. Which shapes do you like?', '4. Which colors do you like?', '5. When was your last eye exam?'],
+           'total' :  [500, 475, 380, 361, 270]
+            }
+                            
+percentages = pd.DataFrame(df_dic)
+
+
+#how to go back the last edit spot:
+[command k then command q]
+
+
+
+#example of iso datetime functions how to write datetime format:
+datetime.datetime(2011, 11, 4, 0, 0)
+>>> datetime.fromisoformat('2011-11-04T00:05:23')
+
+#datetime.isoformat(sep='T', timespec='auto')
+Return a string representing the date and time in ISO 8601 format:
+
+YYYY-MM-DDTHH:MM:SS.ffffff, if microsecond is not 0
+
+YYYY-MM-DDTHH:MM:SS, if microsecond is 0
+
+
+
+#how to create a new df table with datetime
+import pandas as pd
+import numpy as np
+
+np.random.seed(0)
+# create an array of 5 dates starting at '2015-02-24', one per minute
+rng = pd.date_range('2015-02-24', periods=5, freq='T')
+df = pd.DataFrame({ 'Date': rng, 'Val': np.random.randn(len(rng)) }) 
+
+print (df)
+# Output:
+#                  Date       Val
+# 0 2015-02-24 00:00:00  1.764052
+# 1 2015-02-24 00:01:00  0.400157
+# 2 2015-02-24 00:02:00  0.978738
+# 3 2015-02-24 00:03:00  2.240893
+# 4 2015-02-24 00:04:00  1.867558
+
+# create an array of 5 dates starting at '2015-02-24', one per day
+rng = pd.date_range('2015-02-24', periods=5, freq='D')
+df = pd.DataFrame({ 'Date': rng, 'Val' : np.random.randn(len(rng))}) 
+
+print (df)
+# Output:
+#         Date       Val
+# 0 2015-02-24 -0.977278
+# 1 2015-02-25  0.950088
+# 2 2015-02-26 -0.151357
+# 3 2015-02-27 -0.103219
+# 4 2015-02-28  0.410599
+
+# create an array of 5 dates starting at '2015-02-24', one every 3 years
+rng = pd.date_range('2015-02-24', periods=5, freq='3A')
+df = pd.DataFrame({ 'Date': rng, 'Val' : np.random.randn(len(rng))})  
+
+print (df)
+# Output:
+#         Date       Val
+# 0 2015-12-31  0.144044
+# 1 2018-12-31  1.454274
+# 2 2021-12-31  0.761038
+# 3 2024-12-31  0.121675
+# 4 2027-12-31  0.443863
+
+DataFrame with DatetimeIndex:
+
+import pandas as pd
+import numpy as np
+
+np.random.seed(0)
+rng = pd.date_range('2015-02-24', periods=5, freq='T')
+df = pd.DataFrame({ 'Val' : np.random.randn(len(rng)) }, index=rng)  
+
+print (df)
+# Output:
+#                           Val
+# 2015-02-24 00:00:00  1.764052
+# 2015-02-24 00:01:00  0.400157
+# 2015-02-24 00:02:00  0.978738
+# 2015-02-24 00:03:00  2.240893
+# 2015-02-24 00:04:00  1.867558
+
+Offset-aliases for parameter freq in date_range:
+
+Alias     Description
+B         business day frequency  
+C         custom business day frequency (experimental)  
+D         calendar day frequency  
+W         weekly frequency  
+M         month end frequency  
+BM        business month end frequency  
+CBM       custom business month end frequency  
+MS        month start frequency  
+BMS       business month start frequency  
+CBMS      custom business month start frequency  
+Q         quarter end frequency  
+BQ        business quarter endfrequency  
+QS        quarter start frequency  
+BQS       business quarter start frequency  
+A         year end frequency  
+BA        business year end frequency  
+AS        year start frequency  
+BAS       business year start frequency  
+BH        business hour frequency  
+H         hourly frequency  
+T, min    minutely frequency  
+S         secondly frequency  
+L, ms     milliseconds  
+U, us     microseconds  
+N         nanoseconds  
+
+
+
+#easy way tocreate a practice df data frame:
+df = pd.DataFrame({'A':[1,2,3],
+               'B':[1,2,3],
+               'C':[1,2,3],
+               'D':[1,2,3]})    
+
+#great page on using functiona and columns:
+3
+
+
+Is there a way in pandas to apply a function to a dataframe using the column names as argument names? 
+https://stackoverflow.com/questions/58455054/python-pandas-apply-function-using-column-names-as-named-arguments#:~:text=4%20Answers&text=The%20function%20to%20apply%20f,a%20wrapper%20for%20this%20purpose.
+
+
+##
+##how to create face data to write code or queries to plug into real data
+
+#generate genders, names, item_names
+def random_genders(size, p=None):
+    """Generate n-length ndarray of genders."""
+    if not p:
+        # default probabilities
+        p = (0.49, 0.49, 0.01, 0.01)
+    gender = ("M", "F", "O", "")
+    return np.random.choice(gender, size=size, p=p)
+
+#this is the example I took it from:
+def random_genders(size, p=None):
+    """Generate n-length ndarray of genders."""
+    if not p:
+        # default probabilities
+        p = (0.49, 0.49, 0.01, 0.01)
+    gender = ("M", "F", "O", "")
+    return np.random.choice(gender, size=size, p=p)
+
+
+#generate times
+
+
+
+
+
+#more full explanation of the multiplication to make it day or minute or minute and seconds...
+def random_datetimes_or_dates(start, end, out_format='datetime', n=10): 
+
+    '''   
+    unix timestamp is in ns by default. 
+    I divide the unix time value by 10**9 to make it seconds (or 24*60*60*10**9 to make it days).
+    The corresponding unit variable is passed to the pd.to_datetime function. 
+    Values for the (divide_by, unit) pair to select is defined by the out_format parameter.
+    for 1 -> out_format='datetime'
+    for 2 -> out_format=anything else
+    '''
+    (divide_by, unit) = (10**9, 's') if out_format=='datetime' else (24*60*60*10**9, 'D')
+
+    start_u = start.value//divide_by
+    end_u = end.value//divide_by
+
+    return pd.to_datetime(np.random.randint(start_u, end_u, n), unit=unit) 
+
+#output of that:
+
+start = pd.to_datetime('2015-01-01')
+end = pd.to_datetime('2018-01-01')
+random_dates(start, end)
+
+DatetimeIndex(['2016-10-08 07:34:13', '2015-11-15 06:12:48',
+               '2015-01-24 10:11:04', '2015-03-26 16:23:53',
+               '2017-04-01 00:38:21', '2015-05-15 03:47:54',
+               '2015-06-24 07:32:32', '2015-11-10 20:39:36',
+               '2016-07-25 05:48:09', '2015-03-19 16:05:19'],
+              dtype='datetime64[ns]', freq=None)
+
+
+
+
+random_datetimes_or_dates(start, end, out_format='datetime')
+DatetimeIndex(['2017-01-30 05:14:27', '2016-10-18 21:17:16',
+               '2016-10-20 08:38:02', '2015-09-02 00:03:08',
+               '2015-06-04 02:38:12', '2016-02-19 05:22:01',
+
+
+                  '2015-11-06 10:37:10', '2017-12-17 03:26:02',
+                   '2017-11-20 06:51:32', '2016-01-02 02:48:03'],
+                  dtype='datetime64[ns]', freq=None)
+
+random_datetimes_or_dates(start, end, out_format='not datetime')
+
+DatetimeIndex(['2017-05-10', '2017-12-31', '2017-11-10', '2015-05-02',
+               '2016-04-11', '2015-11-27', '2015-03-29', '2017-05-21',
+               '2015-05-11', '2017-02-08'],
+              dtype='datetime64[ns]', freq=None) 
+
+
+
+## easy way to convert datetime to unix in nanoseconds:
+pd.to_datetime('1970-01-01').value
+
+remember to divide if you want days or seconds: days = x/24*60*60*10**9 , seconds = x/10**9
+
+you can then use pd.to_datetime() to convert it back I think?
+
+
+##how the .max() function works how to create a max() function how the .min() function works
+# instead you can just use this:
+#  most_recent_date = nyt_filtered_state['date'].max()
+
+def biggest_date(thingy):
+    max = x[0]
+    for i in thingy:
+        if i > max:
+            max = i
+    return max
+
+
+##Both functions I used to create random datetimes and randomly chosen names, also, how to call them:
+
+    def random_datetimes_or_dates(start='2020-01-01 00:00', end='2020-03-01 00:00', out_format='datetime', n=10):
+        #set start and end to work from a string:
+        fixed_start = pd.to_datetime(start)
+        fixed_end = pd.to_datetime(end)
+        '''set it up so it decides whether your using seconds or days.
+        if seconds:
+            date.value/10**9<--- this is how you get seconds from a unix timestamp aka date = pd.to_datetime('1936-01-01 00:05')
+        if days:  
+            date.value/24*60*60*10**9'''
+        (divide_by, unit) = (10**9, 's') if out_format == 'datetime' else (24*60*60*10**9,'D')
+
+        start_u = fixed_start.value// divide_by
+        end_u = fixed_end.value// divide_by
+        
+        return pd.to_datetime(np.random.randint(start_u, end_u, n), unit=unit)
+
+
+    #create randomish coffee box name function
+    def item_name_randomizer(size, p=None):
+        if not p:
+            p = (.40, .40, .15, .05)
+        names = ['ardi', 'yirgz', 'mexico', 'timor']
+        return np.random.choice(names, p=p, size=size)
+        
+    #create df
+    fake_box = pd.DataFrame()
+
+    #create first column with coffee box func
+    fake_box['item_name'] = item_name_randomizer(5, p=None)
+
+    #create second column with dates
+    # fake_box['created_at'] = random_datetimes_or_dates(start, end, out_format='datetime', n=5)
+    fake_box['created_at'] =random_datetimes_or_dates(start='2020-01-01 00:00', end='2020-03-01 00:00', out_format='datetime', n=5)
+    print(fake_box)
+
+
+##how to tranfer table into an sqlite file:
+#transfer to sqlite: from here: https://www.fullstackpython.com/blog/export-pandas-dataframes-sqlite-sqlalchemy.html
+
+from sqlalchemy import create_engine
+
+engine = create_engine('sqlite:///save_pandas.db', echo=True)
+sqlite_connection = engine.connect()
+sqlite_table = "fake_box_sales"
+fake_box.to_sql(sqlite_table, sqlite_connection, if_exists='fail')
+
+sqlite_connection.close()
+
+
+##
+using list comprehension in dataframes: https://chrisalbon.com/python/data_wrangling/pandas_list_comprehension/
+
+
+As list comprehension
+# Subtract 1 from row, for each row in df.year
+`df['previous_year'] = [row-1 for row in df['year']]`
+
+Otherwise you would do it as a for loop here:
+# Create a variable
+next_year = []
+
+# For each row in df.years,
+for row in df['year']:
+    # Add 1 to the row and append it to next_year
+    next_year.append(row + 1)
+
+# Create df.next_year
+df['next_year'] = next_year
+
+
+#create a column of week total
+nyt_filtered_tarrant['lsd_total_cases'] = nyt_filtered_tarrant.cases.diff(periods = 7)
+
+#How to use the round() function in pandas for a column:
+
+nyt_filtered_tarrant['cases_sd_avg'] = nyt_filtered_tarrant['cases_sd_total'] / 7.0
+nyt_filtered_tarrant['cases_sd_avg'] = nyt_filtered_tarrant['cases_sd_avg'].round(1)
+
+
+##data wrangling and tidying from codecademy ##
+
+
+#.melt can be used to re-arrange datat so that some column end up  in rows while others remain as columns:
+similar to pivot but a little more confusing
+https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.melt.html
+
+df = pd.DataFrame({'A': {0: 'a', 1: 'b', 2: 'c'},
+                   'B': {0: 1, 1: 3, 2: 5},
+                   'C': {0: 2, 1: 4, 2: 6}})
+df
+   A  B  C
+0  a  1  2
+1  b  3  4
+2  c  5  6
+
+pd.melt(df, id_vars=['A'], value_vars=['B'])
+   A variable  value
+0  a        B      1
+1  b        B      3
+2  c        B      5
+
+
+#easy ways to strip off website exess stuff like 'https\\'
+
+# .str.lstrip('https://') removes the “https://” from the left side of the string
+restaurants['url'] = restaurants['url'].str.lstrip('https://') 
+ 
+# .str.lstrip('www.') removes the “www.” from the left side of the string
+restaurants['url'] = restaurants['url'].str.lstrip('www.') 
+ 
+
+#learned in family_covid_stats 
+#how to create a new column using if then from two different columns 3 ways!!
+
+    ##  these were the most basic examples:
+    # #1
+    # df['B']=df['A'].copy()
+    # df.loc[df['A_type']!="String", 'B'] = "blank"
+    # #2
+    # df['B'] = df.apply(lambda x: x['A'] if x['A_type'] == 'String' else "Blank", axis = 1)
+    # #3 & 4
+    # df['B'] = df['A'].where(df['A_type'] == "String", 'blank')
+    # #df['B'] = df['A'].mask(df['A_type'] != "String", 'blank')
+    # #alternative
+    # #df['B'] = np.where(df['A_type'] == "String", df['A'], 'blank')
+
+    ##these were my examples
+    #with
+    # nyt_filtered_tarrant['new_where'] = nyt_filtered_tarrant.cases_sd_avg.where(nyt_filtered_tarrant.date == nyt_filtered_tarrant.date.max(), '0')
+    #lamda
+    # nyt_filtered_tarrant['new_lambda'] = nyt_filtered_tarrant.apply(lambda x: x['cases_sd_avg'] if x['date'] == nyt_filtered_tarrant.date.max() else '0', axis=1)
+    #copy
+    nyt_filtered_tarrant['new_copy'] = nyt_filtered_tarrant.cases_sd_avg.copy()
+    nyt_filtered_tarrant.loc[nyt_filtered_tarrant.date != nyt_filtered_tarrant.date.max() , 'new_copy'] = '0'
