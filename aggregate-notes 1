@@ -1,7 +1,30 @@
 
 
+To drag an entire text line up or down use: 
+"start/alt/opt" + up 
+
 
 To stop the running code: use shortcut Ctrl+Alt+M. or press F1 and then select/type Stop Code Run.
+
+
+## From the Fast AI course
+#Jupyter Notebooks:
+press 'h' to pull up the shortcuts menu
+#use formatted text which is done in 'markdown'
+learn markdown its super easy and useful for jupyter Notebooks
+
+
+
+
+#look at last five entries in csv:
+
+print(file.tail())
+
+
+
+
+
+
 
 
 
@@ -129,9 +152,11 @@ df.['x'] = df['x'].lower()
 -
 ##How do we use the Python string formatters %d and %f?
 Answer
-In Python, string formatters are essentially placeholders that let us pass in different values into some formatted string.
+In Python, string formatters are essentially placeholders that 
+let us pass in different values into some formatted string.
 
-The %d formatter is used to input decimal values, or whole numbers. If you provide a float value, it will convert it to a whole number, by truncating the values after the decimal point.
+The %d formatter is used to input decimal values, 
+or whole numbers. If you provide a float value, it will convert it to a whole number, by truncating the values after the decimal point.
 
 For example,
 
@@ -283,6 +308,7 @@ opposite = [not i for i in booleans]
 
 #Early pandas stuff
 # Ways of creating a Pandas DataFrame
+
 # Passing in a dictionary:
 
 # set the column width max so that you can see the entire cell instead of trunkated.  othewise set it to 20 or something
@@ -391,6 +417,12 @@ strip all the white space of column in pandas
 
 ##check your column headers or names:
 print(df.columns)
+
+## clean out any regular expressions like \n 
+
+#replace both things with nothing
+cols = [i.str.replace(r'\\n','').str.replace('xtms','') 
+
 
 
 #ADD A NEW COLUMN with onto a df bassed off the df
@@ -666,6 +698,7 @@ c_cov['column_name'][10]
 
 
 #using .loc or .iloc for index
+
 # Single selections using iloc and DataFrame
 # Rows:
 data.iloc[0] # first row of data frame (Aleshia Tomkiewicz) - Note a Series data type output.
@@ -781,17 +814,33 @@ my_dict = {i:MyList.count(i) for i in MyList}
 {'a': 3, 'c': 3, 'b': 1}
 
 
-#drop method for dropping a column:
+#drop method I have used:
+my_data.drop('Unnamed: 0', axis=1, inplace=True)
+my_data.drop('Unnamed: 0', axis=1, drop=True) #this drops the old index and resets everything.
+
+    df.drop('col1', axis=1, inplace=True)
+
+#drop method alternate for dropping a column:
 df.drop(subset = ['column_name'], axis=1)
 #if you'd like it to perminently affect data use:
-df.drop(subset = ['column_name'], axis=1, inplace=true)
-        ## might not need'subset = ' or brackets if only dropping entire columns or if axis=1?  I'm not sure yet
+    df.drop(subset = ['column_name'], axis=1, inplace=true)
+            ## might not need'subset = ' or brackets if only dropping entire columns or if axis=1?  I'm not sure yet
 so whatever commmand you have to deal with the data it is o
+
+
+
 #drop nan or missing values
 df.dropna(how='any')
 
+## Reset Index and drop old index
+# reset the index and drop old index
+#it is important too use inplace=True to make sure it doesn't just create a separate table
+#It is imporant to drop=True to make sure python doesn't add the old index as a new column
+
+    my_data.reset_index(inplace=True,drop=True)
 
 
+## Pivot 
   b_pivot = b_clicks.groupby(['utm_source', 'is_click']).user_id.count().reset_index()\
   .pivot(columns='is_click',
         index='utm_source',
@@ -1062,6 +1111,10 @@ data["Date"]= pd.to_datetime(data["Date"])
 ## use for days
 # df.columns = pd.to_datetime(df.columns).to_period('D')
 
+## Create a 'Month' column from a date column
+df['month'] = df['Date'].dt.strftime('%b')
+
+
 ##Iteresting date datetime speed notes:
 def lookup(s):
     """
@@ -1123,6 +1176,20 @@ my_series = pd.to_numeric(my_series)
 # convert column "a" of a DataFrame
 df["a"] = pd.to_numeric(df["a"])
 
+## SUPER IMORTANT  convert many columns (a list of specific columns) at once to_numeric or to_datetime if not all of them ##
+
+
+# don't use .drop('column_name') if you want to convert entire df
+
+cols = df.columns.drop('id')
+df[cols] = df[cols].apply(pd.to_numeric, errors='coerce')
+
+does this work?
+cols = df.columns.drop('id')
+df[cols] = df[cols].apply(pd.to_numeric(downcast='integer'), errors='coerce')
+
+exelent post here: https://stackoverflow.com/questions/36814100/pandas-to-numeric-for-multiple-columns
+
 #to make things an integer
 pd.to_numeric(s, downcast='integer')
 #to make them float:
@@ -1132,6 +1199,7 @@ pd.to_numeric(s, downcast='flaot')
 # df = df.astype({"a": int, "b": complex})
 
 #this is what I used, but for some reason it would not work on the new 'test' column. it compiled,but did not 'test':
+
 #make data integers:
 tarrant_df.iloc[1:,2] = pd.to_numeric(tarrant_df.iloc[1:,2], downcast='integer')
 
@@ -1710,3 +1778,375 @@ restaurants['url'] = restaurants['url'].str.lstrip('www.')
     #copy
     nyt_filtered_tarrant['new_copy'] = nyt_filtered_tarrant.cases_sd_avg.copy()
     nyt_filtered_tarrant.loc[nyt_filtered_tarrant.date != nyt_filtered_tarrant.date.max() , 'new_copy'] = '0'
+
+
+
+
+##  From Data Viz Microcourse in Kaggle ##
+
+    # setup jupyter notebook so you are using seaborn
+    import pandas as pd
+    pd.plotting.register_matplotlib_converters()
+    import matplotlib.pyplot as plt
+    %matplotlib inline
+    import seaborn as sns
+    print("Setup Complete")
+
+    # Path of the file to read
+    spotify_filepath = "../input/spotify.csv"
+
+    # Read the file into a variable spotify_data
+    spotify_data = pd.read_csv(spotify_filepath, index_col="Date", parse_dates=True)
+
+    # Line chart showing daily global streams of each song 
+    sns.lineplot(data=spotify_data)
+
+
+## how to set the size of the chart and change the title 
+
+    # Set the width and height of the figure
+    plt.figure(figsize=(14,6))
+
+    # Add title
+    plt.title("Daily Global Streams of Popular Songs in 2017-2018")
+
+    # Line chart showing daily global streams of each song 
+    sns.lineplot(data=spotify_data)
+
+
+
+## How to print out two specific columns of a data set in seaborn 
+
+    # Set the width and height of the figure
+    plt.figure(figsize=(14,6))
+
+    # Add title
+    plt.title("Daily Global Streams of Popular Songs in 2017-2018")
+
+    # Line chart showing daily global streams of 'Shape of You'
+    sns.lineplot(data=spotify_data['Shape of You'], label="Shape of You")
+
+    # Line chart showing daily global streams of 'Despacito'
+    sns.lineplot(data=spotify_data['Despacito'], label="Despacito")
+
+    # Add label for horizontal axis
+    plt.xlabel("Date")
+
+
+
+## Bar Chars & Heatmaps with Seaborn :  
+    https://www.kaggle.com/alexisbcook/bar-charts-and-heatmaps
+
+#Bar Chart:
+    # Set the width and height of the figure
+    plt.figure(figsize=(10,6))
+
+    # Add title
+    plt.title("Average Arrival Delay for Spirit Airlines Flights, by Month")
+
+    # Bar chart showing average arrival delay for Spirit Airlines flights by month
+    sns.barplot(x=flight_data.index, y=flight_data['NK'])
+
+    # Add label for vertical axis
+    plt.ylabel("Arrival delay (in minutes)")
+
+
+## Heat Map:
+
+#note: if you do not give it an x axis it will heat map all the info it has
+
+    # Set the width and height of the figure
+    plt.figure(figsize=(14,7))
+
+    # Add title
+    plt.title("Average Arrival Delay for Each Airline, by Month")
+
+    # Heatmap showing 
+     arrival delay for each airline by month
+    sns.heatmap(data=flight_data, annot=True)
+
+    # Add label for horizontal axis
+    plt.xlabel("Airline")
+
+## Scatter Plots:
+
+# where: the horizontal x-axis (x=insurance_data['bmi']), and
+#the vertical y-axis (y=insurance_data['charges']).
+
+    sns.scatterplot(x=insurance_data['bmi'], y=insurance_data['charges'])
+
+# with a regression line:
+    sns.regplot(x=insurance_data['bmi'], y=insurance_data['charges'])
+
+#w with third variable ie: bmi, charges, and smoker(boolean):
+
+    sns.scatterplot(x=insurance_data['bmi'], y=insurance_data['charges'], hue=insurance_data['smoker'])
+
+# now try with 2 linear regression lines. note the data= thing instesad of df['my_col'] situation:
+
+    sns.lmplot(x="bmi", y="charges", hue="smoker", data=insurance_data)
+
+# categorical scatter plot, and we build it with the sns.swarmplot command:
+
+    sns.swarmplot(x=insurance_data['smoker'],
+              y=insurance_data['charges'])
+
+
+# Histogram 
+    sns.distplot(a=iris_data['Petal Length (cm)'], kde=False)
+
+note: We customize the behavior of the command with two additional pieces of information:
+
+a= chooses the column we'd like to plot (in this case, we chose 'Petal Length (cm)').
+kde=False is something we'll always provide when creating a histogram, as leaving it out will create a slightly different plot.
+
+# KDE plots
+    kernel density estimate (KDE) plot. In case you're not familiar with KDE plots, you can think of it as a smoothed histogram.
+
+    To make a KDE plot, we use the sns.kdeplot command. 
+    Setting shade=True colors the area below the curve (and data= has identical functionality as when we made the histogram above).
+
+KDE plot#
+
+    sns.kdeplot(data=iris_data['Petal Length (cm)'], shade=True)
+
+
+# 2D KDE plot
+
+    sns.jointplot(x=iris_data['Petal Length (cm)'], y=iris_data['Sepal Width (cm)'], kind="kde")
+
+# Histogram made up of multiple histograms from multiple files on one graph
+
+    sns.distplot(a=iris_set_data['Petal Length (cm)'], label="Iris-setosa", kde=False)
+    sns.distplot(a=iris_ver_data['Petal Length (cm)'], label="Iris-versicolor", kde=False)
+    sns.distplot(a=iris_vir_data['Petal Length (cm)'], label="Iris-virginica", kde=False)
+
+    # Add title
+    plt.title("Histogram of Petal Lengths, by Species")
+
+    # Force legend to appear
+    plt.legend() #in case the legend doesn't automatically plot
+
+## KDE plots for each species from multiple dfs
+
+    sns.kdeplot(data=iris_set_data['Petal Length (cm)'], label="Iris-setosa", shade=True)
+    
+    
+Good Summary of Different Graphs and Plots in Seaborn:
+Since it's not always easy to decide how to best tell the story behind your data, we've broken the chart types into three broad categories to help with this.
+
+Trends - A trend is defined as a pattern of change.
+
+    sns.lineplot - Line charts are best to show trends over a period of time, and multiple lines can be used to show trends in more than one group.
+
+Relationship - There are many different chart types that you can use to understand relationships between variables in your data.
+
+    sns.barplot - Bar charts are useful for comparing quantities corresponding to different groups.
+    sns.heatmap - Heatmaps can be used to find color-coded patterns in tables of numbers.
+
+    sns.scatterplot - Scatter plots show the relationship between two continuous variables; if color-coded, we can also show the relationship with a third categorical variable.
+
+    sns.regplot - Including a regression line in the scatter plot makes it easier to see any linear relationship between two variables.
+
+    sns.lmplot - This command is useful for drawing multiple regression lines, if the scatter plot contains multiple, color-coded groups.
+
+    sns.swarmplot - Categorical scatter plots show the relationship between a continuous variable and a categorical variable.
+
+Distribution - We visualize distributions to show the possible values that we can expect to see in a variable, along with how likely they are.
+
+    sns.distplot - Histograms show the distribution of a single numerical variable.
+
+    sns.kdeplot - KDE plots (or 2D KDE plots) show an estimated, smooth distribution of a single numerical variable (or two numerical variables).
+
+    sns.jointplot - This command is useful for simultaneously displaying a 2D KDE plot with the corresponding KDE plots for each individual variable.
+
+Custom Styles:
+    sns.set_style("darkgrid")
+
+    different Seaborn styles:
+    "darkgrid"
+    "whitegrid"
+    "dark"
+    "white"
+    "ticks"
+
+    Use the style before the rest of the plotting:
+
+    # Change the style of the figure
+    sns.set_style("darkgrid")
+
+    # Line chart 
+    plt.figure(figsize=(12,6))
+    sns.lineplot(data=spotify_data)
+
+Kaggle Data sets:
+    https://www.kaggle.com/datasets
+
+
+## Cleaning Dad's Solar Exel sheet csv ##
+change columns header reset_index reset index
+    ##  Here the columns were actually nul values and the first row had what I wanted as the columns.  Also there was a blank column[0] I wanted to get rid of.
+    Also the dates might as well be the index so I might change that too.
+
+my_data = pd.read_csv(my_filepath, parse_dates=True)
+
+#Get rid of column 0
+my_data = my_data.iloc[:,1:]
+
+#save the row (row[0] that contains the preferred col names as a list:
+new_header = my_data.iloc[0]
+
+# Save the Date of the data:
+date_sent = my_data.columns[0]
+
+# get rid of 1st 3 rows
+my_data = my_data.iloc[3:,:]
+
+#clean off the bottom rows of the data:
+my_data = my_data.iloc[:-13,:]
+
+# reset the index and drop old index
+my_data.reset_index(inplace=True,drop=True)
+
+#change the column names to 'new_header':
+my_data.columns = new_header
+my_data.head()
+
+#Make 'Date and Time' the index
+    #notes:
+        drop=True --> unnecessary.
+        inplace=True --> ABSOLUTELY necesary, or it won't keep the fix
+        substitution --> my_data = my_data.set_index('Date and Time')
+
+my_data.set_index('Date and Time', inplace=True)
+
+
+
+
+## reorder move change order columns ##
+
+
+best examples: https://stackoverflow.com/questions/35321812/move-column-in-pandas-dataframe
+
+#easiest:
+
+monthly_data = monthly_data[['Month'] + [c for c in monthly_data if c not in ['Month']]]
+
+
+#good to make sure all the columns already exist
+
+moving_cols = ['Date and Time','Month']
+monthly_data = monthly_data[[c for c in moving_cols if c in monthly_data] + [c for c in monthly_data if c not in moving_cols]]
+
+note: you cannot try to simply place a list like df = df[['my_list'] + [c for c in df]].  It will not work.  !! you must use a list comprehension eg [s for s in mylist]
+
+## Create a month or a year column from a datetime column:
+#first create month column in a monthly df
+
+monthly_data = my_data
+
+#BEST WAY is .dt.month or .dt.year
+
+monthly_data['Month'] = monthly_data['Date and Time'].dt.month
+
+
+# alternative just for month, use dt.to_period()
+
+
+# df['mnth_yr'] = df.date_column.dt.to_period('M') 
+monthly_data['Month'] = monthly_data['Month'].dt.to_period('M') 
+
+
+
+## a grouping key is a column or row that will be used to combine in a .groupby() operation. eg: df['Month] or df['blue']
+
+##if you use df.groupby(['col']).mean() it will take any numerical columns and return their average based on 'col'.
+if there isn't a numerical column it is called a 'nuisance' column  and will be excluded from the output.
+
+
+##  Script for moving multiple xlsx sheets in one xl workbook  into multiple CSV files: ##
+#from this site: https://medium.com/better-programming/using-python-to-convert-worksheets-in-an-excel-file-to-separate-csv-files-7dd406b652d7
+
+'''This python script is to extract each sheet in an Excel workbook as a new csv file'''
+
+import csv
+import xlrd
+import sys
+
+def ExceltoCSV(excel_file, csv_file_base_path):
+    workbook = xlrd.open_workbook(excel_file)
+    for sheet_name in workbook.sheet_names():
+        print('processing - ' + sheet_name)
+        worksheet = workbook.sheet_by_name(sheet_name)
+        csv_file_full_path = csv_file_base_path + str('_') + sheet_name.lower().replace(" - ", "_").replace(" ","_") + '.csv'
+        csvfile = open(csv_file_full_path, 'w')
+        writetocsv = csv.writer(csvfile, quoting = csv.QUOTE_ALL)
+        for rownum in range(worksheet.nrows):
+            writetocsv.writerow(
+                list(x.encode('utf-8') if type(x) == type(u'') else x for x in worksheet.row_values(rownum)
+                )
+            )
+        csvfile.close()
+        print(sheet_name + ' has been saved at - ' + csv_file_full_path)
+if __name__ == '__main__':
+    ExceltoCSV(excel_file = sys.argv[1], csv_file_base_path = sys.argv[2])
+
+
+##
+To run this Python script, go to your terminal and do the following.
+MacBook-Pro:~ bobthedude$ python exceltab_to_csv.py ./datafiles/client_data.xlsx ./datafiles/client_data_csv/
+
+
+
+
+
+
+## Write CSV file and other things using PylightXl ##
+
+
+
+# set the delimiter of the CSV to be the value of your choosing
+# set the default worksheet to write the read in CSV data to
+db = xl.readcsv(fn='input.csv', delimiter='/', ws='sh2')
+# make modifications to it then,
+# now write it back out as a csv; or as an excel file, see xl.writexl()
+xl.writecsv(db=db, fn='new.csv', ws=('sh2'), delimiter=',')
+
+## Read XLSX file
+import pylightxl as xl
+
+# readxl returns a pylightxl database that holds all worksheets and its data
+db = xl.readxl(fn='folder1/folder2/excelfile.xlsx')
+
+# read only selective sheetnames
+db = xl.readxl(fn='folder1/folder2/excelfile.xlsx', ws=('Sheet1','Sheet3'))
+
+# return all sheetnames
+db.ws_names
+>>> ['Sheet1', 'Sheet3']
+
+
+
+
+## Dad's Solar Project Learnings: ##
+
+If there are 3 column headers: "col1\n", "col2xtms","col3\n"
+how can you clean off the \n and why is it difficut:
+Why difficult?
+1.  the column names are in an index so you have to copy them as a list before using .replace()
+
+2. you can't simply .replace the "\n" because it is a regular expression.  You must not only escape the regular expression ie('\\n' instead of '\n').
+but you must also use r'\\n'.  r represents raw.  This tells python 2 things: a) read the following string as though it isn't a regular expression.  b) excape the '\' and read it as a raw string.  
+
+I don't completely understand why you need both r and \ but you need both in Dad's solar example.
+
+so to clean up:
+
+#save the column names as a list called cols
+cols = df.columns
+
+#replace both things with nothing
+cols = [i.str.replace(r'\\n','').str.replace('xtms','') 
+
+#resave the list as the column headers
+df.columns = cols
