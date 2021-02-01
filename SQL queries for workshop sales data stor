@@ -1,0 +1,96 @@
+SQL queries for workshop sales data story
+
+
+--$18+ optimal variants coffee selection
+
+--original
+with
+vpd as(select created_at_date, variant_name, count(created_at) as units_sold, sum(net_sales) as net_sales
+from public.dave_retail_sandbox
+
+where category_name = 'Retail Coffee'
+         and item_name = 'Workshop Coffees'
+        and item_base_price > 17
+               and expired = false
+               and employee = false
+               and customer_id is not null
+                and created_at_date < '2020-03-01'
+group by created_at_date, variant_name
+order by 1,2),
+
+
+
+     --filter out any rows where units_sold < 2 to get rid of fluke sales
+    vpdx as(
+        select *
+        from vpd
+        where units_sold > 2
+    )
+    ,
+vpd2 as(select created_at_date, count(*)as variants_per_day, sum(units_sold) as total_ws_usold, round(sum(net_sales),2) as net_sales_pd
+from vpd
+group by created_at_date
+order by 1)
+
+
+--group by variants_per_day and count total # of units sold and count total sales
+--divide everything by number of days
+select variants_per_day, count(created_at_date) as number_of_days, sum(total_ws_usold)/number_of_days as unit_sales_per_variants_day, round(sum(net_sales_pd)/number_of_days, 0) as net_sales_per_variants_day
+from vpd2
+group by variants_per_day
+order by 3 desc;
+
+with
+    vpd as(select created_at_date, variant_name, count(created_at) as units_sold,
+--case {condition}
+--   when {value1} then {result1}
+--   when {value2} then {result2}
+--   else {result3}
+-- end
+                  case
+                      when item_base_price <=17 then units_sold = 0
+                    end
+
+                      count(created_at) as units_sold2,
+
+                  sum(net_sales) as net_sales
+    from public.dave_retail_sandbox
+
+    where category_name = 'Retail Coffee'
+             and item_name = 'Workshop Coffees'
+                   and expired = false
+                   and employee = false
+                   and customer_id is not null
+                    and created_at_date < '2020-03-01'
+    group by created_at_date, variant_name
+    order by 1,2)
+--      ,
+     --filter out any rows where units_sold < 2 to get rid of fluke sales
+--     vpdx as(
+        select *
+        from vpd
+        where units_sold > 2
+--     )
+--     ,
+-- vpd2 as(select created_at_date, count(*)as variants_per_day, sum(units_sold) as total_ws_usold, round(sum(net_sales),2) as net_sales_pd
+-- from vpd
+-- group by created_at_date
+-- order by 1)
+
+
+--group by variants_per_day and count total # of units sold and count total sales
+--divide everything by number of days
+select variants_per_day, count(created_at_date) as number_of_days, sum(total_ws_usold)/number_of_days as unit_sales_per_variants_day, round(sum(net_sales_pd)/number_of_days, 0) as net_sales_per_variants_day
+from vpd2
+group by variants_per_day
+order by 3 desc;
+
+
+
+
+--select * from public.dave_retail_sandbox limit 2
+
+
+
+
+

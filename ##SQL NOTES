@@ -1,0 +1,621 @@
+
+
+#VS Code Shortcut:    - hit "command + D" to highlight the current word and each time you hit you will highlight the next duplicate of that word.
+## Datagrip shortcut: clear all other windows
+shift+command+f12 +fn  
+
+
+
+#if using your own database on your own computer make sure you start/open postgresql 13
+
+
+
+## Last sql question in many-to-many create your own Postgres Database Chapter:
+
+
+CREATE TABLE restaurant (
+  id varchar(20) PRIMARY KEY,
+  name varchar(20), 
+  sub_name text
+);
+
+CREATE TABLE address (
+  id varchar(20) PRIMARY KEY,
+  street_number varchar(20),
+  street varchar(20),
+  city varchar(20),
+  state varchar(2),
+  website text,
+  restaurant_id varchar(20) REFERENCES restaurant(id),
+  UNIQUE(restaurant_id)
+);
+
+CREATE TABLE categories(
+  id varchar(2) PRIMARY KEY,
+  name varchar(50),
+  description varchar(200)
+);
+
+CREATE TABLE dish(
+  id integer PRIMARY KEY,
+  name varchar(50),
+  description text,
+  hot_and_spicy boolean
+);
+
+ CREATE TABLE review(
+  id varchar(20) PRIMARY KEY,
+  score real,
+  comments text,
+  date date,
+  restaurant_id varchar(20) REFERENCES restaurant(id),
+  UNIQUE(id)
+);
+
+CREATE TABLE categories_dishes(
+  categories_id varchar(20) REFERENCES categories(id),
+  dish_id integer REFERENCES dish(id),
+  price money,
+  UNIQUE(dish_id, categories_id)
+);
+
+-- *--------------------------------------------
+--  Insert values for restaurant
+--  *--------------------------------------------
+--  */
+INSERT INTO restaurant VALUES (
+  1,
+  'Bytes of China',
+  'Delectable Chinese Cuisine'),
+  (
+  3.9,
+  '6175551212',
+  'Mon - Fri 9:00 am to 9:00 pm, Weekends 10:00 am to 11:00 pm'
+);
+
+/* 
+ *--------------------------------------------
+ Insert values for address
+ *--------------------------------------------
+ */
+INSERT INTO address VALUES (
+  1,
+  '2020',
+  'Busy Street',
+  'Chinatown',
+  'MA',
+  'http://bit.ly/BytesOfChina'
+);
+/* 
+ *--------------------------------------------
+ Insert values for review
+ *--------------------------------------------
+ */
+INSERT INTO review VALUES (
+  1,
+  5.0,
+  'Would love to host another birthday party at Bytes of China!',
+  '05-22-2020',
+  1
+);
+
+INSERT INTO review VALUES (
+  2,
+  4.5,
+  'Other than a small mix-up, I would give it a 5.0!',
+  '04-01-2020',
+  1
+);
+
+INSERT INTO review VALUES (
+  3,
+  3.9,
+  'A reasonable place to eat for lunch, if you are in a rush!',
+  '03-15-2020',
+  1
+);
+
+/* 
+ *--------------------------------------------
+ Insert values for categories
+ *--------------------------------------------
+ */
+INSERT INTO categories VALUES (
+  'C',
+  'Chicken',
+  null
+);
+
+INSERT INTO categories VALUES (
+  'LS',
+  'Luncheon Specials',
+  'Served with Hot and Sour Soup or Egg Drop Soup and Fried or Steamed Rice  between 11:00 am and 3:00 pm from Monday to Friday.'
+);
+
+INSERT INTO categories VALUES (
+  'HS',
+  'House Specials',
+  null
+);
+
+
+/* 
+ *--------------------------------------------
+ Insert values for dish
+ *--------------------------------------------
+ */
+INSERT INTO dish VALUES (
+  1,
+  'Chicken with Broccoli',
+  'Diced chicken stir-fried with succulent broccoli florets',
+  false
+);
+
+INSERT INTO dish VALUES (
+  2,
+  'Sweet and Sour Chicken',
+  'Marinated chicken with tangy sweet and sour sauce together with pineapples and green peppers',
+  false
+);
+
+INSERT INTO dish VALUES (
+  3,
+  'Chicken Wings',
+  'Finger-licking mouth-watering entree to spice up any lunch or dinner',
+  true
+);
+
+INSERT INTO dish VALUES (
+  4,
+  'Beef with Garlic Sauce',
+  'Sliced beef steak marinated in garlic sauce for that tangy flavor',
+  true
+);
+
+INSERT INTO dish VALUES (
+  5,
+  'Fresh Mushroom with Snow Peapods and Baby Corns',
+  'Colorful entree perfect for vegetarians and mushroom lovers',
+  false
+);
+
+INSERT INTO dish VALUES (
+  6,
+  'Sesame Chicken',
+  'Crispy chunks of chicken flavored with savory sesame sauce',
+  false
+);
+
+INSERT INTO dish VALUES (
+  7,
+  'Special Minced Chicken',
+  'Marinated chicken breast sauteed with colorful vegetables topped with pine nuts and shredded lettuce.',
+  false
+);
+
+INSERT INTO dish VALUES (
+  8,
+  'Hunan Special Half & Half',
+  'Shredded beef in Peking sauce and shredded chicken in garlic sauce',
+  true
+);
+
+
+------------
+
+/*
+ *--------------------------------------------
+ Insert valus for cross-reference table, categories_dishes
+ *--------------------------------------------
+ */
+INSERT INTO categories_dishes VALUES (
+  'C',
+  1,
+  6.95
+);
+
+INSERT INTO categories_dishes VALUES (
+  'C',
+  3,
+  6.95
+);
+
+INSERT INTO categories_dishes VALUES (
+  'LS',
+  1,
+  8.95
+);
+
+INSERT INTO categories_dishes VALUES (
+  'LS',
+  4,
+  8.95
+);
+
+INSERT INTO categories_dishes VALUES (
+  'LS',
+  5,
+  8.95
+);
+
+INSERT INTO categories_dishes VALUES (
+  'HS',
+  6,
+  15.95
+);
+
+INSERT INTO categories_dishes VALUES (
+  'HS',
+  7,
+  16.95
+);
+
+INSERT INTO categories_dishes VALUES (
+  'HS',
+  8,
+  17.95
+);
+
+
+
+
+
+
+
+
+---  ---
+
+
+
+
+##SQL NOTES
+
+
+
+
+
+#add a column
+alter table films
+    add column run_time int;
+
+#create a table
+create table students(
+    name text,
+    age INTEGER
+        );
+
+# to delete or drop a table or two:
+DROP TABLE table_1, table_2;
+
+# To Drop a table that has a primary key used by other tables as 
+foreign key:
+
+drop table table_1 CASCADE ;
+
+
+#delete rows from a table:
+DELETE
+FROM
+    production.product_history
+WHERE
+    model_year = 2017;
+
+
+#  info into that table:
+INSERT INTO students(name,age)
+VALUES ('Zack Morris', 18);
+
+#rename table:
+ALTER TABLE students
+RENAME TO films;
+
+#rename column
+ALTER table films
+RENAME column age TO release_year;
+
+#add a bunch of stuff to a table:
+INSERT INTO films(name,release_year)
+VALUES
+    ('The Matrix',1999),
+    ('Monster’s Inc.', 2001),
+    ('Call Me By Your Name',2017);
+
+# delete any rows that are null in the column "name": https://www.sqlservertutorial.net/sql-server-basics/sql-server-delete/#:~:text=To%20remove%20one%20or%20more%20rows%20from%20a%20table%20completely,deleted%20in%20the%20FROM%20clause.
+
+delete
+from films
+where name is null
+
+# Delete or Drop a Column:
+
+alter table table_name 
+drop column column_name; 
+
+#insert combined with select
+INSERT INTO table-name (column-names) 
+SELECT column-names
+  FROM table-name
+ WHERE condition
+
+#add or change or edit something to existing rows or columns:
+
+update films
+set run_time = 136
+where name = 'The Matrix'
+
+#add a constraint to the name column so that anything entred  must be unique
+
+alter table films
+add constraint unique_release unique(name);
+
+# a Cast in SQL is something that changes stuff from one data type to another.
+
+create a column as unique
+PostgreSQL allows you to create a UNIQUE constraint to a group of columns using the following syntax: CREATE TABLE table ( c1 data_type, c2 data_type, 
+c3 data_type, UNIQUE (c2, c3) ); The combination of values in column c2 and c3 will be unique across the whole table.
+
+
+
+# looking up constraints on columns
+this is very similar to lookig the type() of something in python.  super useful for checking stuff really quickly
+maybe even useful for more complex programming stuff.
+
+-- keep everything the same except the 'where' claus.
+
+SELECT
+  constraint_name, table_name, column_name
+FROM
+  information_schema.key_column_usage
+WHERE
+  table_name = 'author';
+
+
+--How to have two primary keys at once: "Composite Primary Key"
+
+PRIMARY KEY (column_one, column_two)
+
+example:
+CREATE TABLE popular_recipes (
+  recipe_id varchar(20),
+  ingredient_id varchar(20),
+  downloaded integer,
+ 
+  PRIMARY KEY (recipe_id, ingredient_id)
+);
+
+--Logic for figuring out where a foreign key goes:
+For example, let’s say we have a person table and an email table. If we want a list of names and associated emails, 
+we would need to join these tables together.
+
+Where do we place this foreign key? Should it be in the person table or email table? To answer this question,
+we need to figure out how person is related to email. Does creating a person record require that an email record exists as well?
+This is not usually the case. A person can have no email address or one or more email addresses. 
+So when creating a record in the person table, we don’t insist that this person should have a record in the email table as well.
+
+
+#how to    a foreign key:  
+
+-- REFERENCES primary_key_table(pk_column_name)
+
+CREATE TABLE person (
+  id integer PRIMARY KEY,
+  name varchar(20),
+  age integer
+);
+ 
+CREATE TABLE email (
+  email varchar(20) PRIMARY KEY,
+  person_id integer REFERENCES person(id),
+  storage integer,
+  price money
+);
+
+
+##Designing a Database Schema Chapter:
+To enforce a strictly one-to-one relationship in PostgreSQL, we need another keyword, UNIQUE.:
+
+license_id char(20) REFERENCES driver(license_id) UNIQUE
+
+
+
+
+--how to drop a column:
+ALTER TABLE table_name 
+DROP COLUMN column_name;
+
+--How to join 3 tables together using primary keys and foreign keys:
+
+SELECT table_one.column_one AS alias_one, table_two.column_two AS alias_two, table_three.column_three AS alias_three
+FROM table_one
+INNER JOIN table_two
+ON table_one.primary_key = table_two.foreign_key
+INNER JOIN table_three
+ON table_two.primary_key = table_three.foreign_key;
+
+
+
+####
+
+#simple way to find disctint number of different campaigns in a table
+SELECT COUNT(DISTINCT utm_campaign)
+FROM page_visits;
+
+
+ROUND() function takes two arguments inside the parenthesis:
+a column name
+an integer
+
+SELECT ROUND(price, 0)
+FROM fake_apps;
+
+To round and get avg of a column:
+SELECT ROUND(AVG(price),2)
+FROM fake_apps;
+
+
+How to use GROUP BY:
+SELECT year,
+   AVG(imdb_rating)
+FROM movies
+GROUP BY year
+ORDER BY year;
+
+
+#Write a new query that calculates the total number of downloads for each category.
+Select category and SUM(downloads).
+
+SELECT category, SUM(downloads)
+FROM fake_apps;
+Next, group the result for each category by adding a GROUP BY:
+
+SELECT category, SUM(downloads)
+FROM fake_apps
+GROUP BY category;
+
+#Summary of MUltiple tables
+JOIN will combine rows from different tables if the join condition is true.
+
+LEFT JOIN will return every row in the left table, and if the join condition is not met, NULL values are used to fill in the columns from the right table.
+
+Primary key is a column that serves a unique identifier for the rows in the table.
+
+Foreign key is a column that contains the primary key to another table.
+
+CROSS JOIN lets us combine all rows of one table with all rows of another table.
+
+UNION stacks one dataset on top of another.
+
+WITH allows us to define one or more temporary tables that can be used in the final query.
+
+
+#how to crete a table in SQL
+CREATE TABLE database_name.table_name(
+   column1 datatype PRIMARY KEY(one or more columns),
+   column2 datatype,
+   column3 datatype,
+   .....
+   columnN datatype
+);
+
+
+
+# using datetime in sqlite: from SouptoNuts which is AMAZING!! http://souptonuts.sourceforge.net/readme_sqlite_tutorial.html
+The complete list of options, or modifiers as they are called in this file, are as follows:
+
+       NNN days
+       NNN hours
+       NNN minutes
+       NNN.NNNN seconds
+       NNN months
+       NNN years
+       start of month
+       start of year
+       start of week
+       start of day
+       weekday N
+       unixepoch
+       localtime
+       utc
+In addition, there is the "strftime" function, which will take a timestring, and convert it to the specified format, with the modifications. Here is the format for this function:
+
+     **    strftime( FORMAT, TIMESTRING, MOD, MOD, ...)
+     **
+     ** Return a string described by FORMAT.  Conversions as follows:
+     **
+     **   %d  day of month
+     **   %f  ** fractional seconds  SS.SSS
+     **   %H  hour 00-24
+     **   %j  day of year 000-366
+     **   %J  ** Julian day number
+     **   %m  month 01-12
+     **   %M  minute 00-59
+     **   %s  seconds since 1970-01-01
+     **   %S  seconds 00-59
+     **   %w  day of week 0-6  sunday==0
+     **   %W  week of year 00-53
+     **   %Y  year 0000-9999
+Below is an example.
+
+     sqlite> select strftime("%m-%d-%Y %H:%M:%S %s %w %W",'now','localtime');
+     11-07-2004 16:23:15 1099844595 0 44
+
+How to test and seach specific dates:
+CREATE TABLE dateTest(myDate VARCHAR);
+INSERT INTO dateTest(myDate) VALUES ('2013-08-29 18:57:00');
+SELECT strftime('%Y-%m-%d',myDate) AS formatted, myDate FROM dateTest WHERE strftime('%Y-%m-%d') = 2013-08-29;   /* this won't retrieve any row */
+SELECT strftime('%Y-%m-%d',myDate) AS formatted, myDate FROM dateTest WHERE strftime('%Y-%m-%d') = '2013-08-29';   /* this will retrieve '2013-08-29 | '2013-08-29 18:57:00' */
+'
+
+search used to goup table by the week of each year.  used for fake coffee box sales:
+
+select strftime('%Y-%W', created_at) as 'Week #', item_name,item_base_price,  sum(quantity) as 'bags sold', wksp_otb
+from fake_box_sales group by 2, 1 ORDER BY 1
+
+
+###Here’s the basic structure of a case statement:
+
+case {condition}
+  when {value1} then {result1}
+  when {value2} then {result2}
+  else {result3}
+end
+
+example of case statemtn:
+
+SELECT player_name,
+       year,
+       CASE WHEN year = 'SR' THEN 'yes'
+            ELSE NULL END AS is_a_senior
+  FROM benn.college_football_players
+
+
+
+  #datagrip tips:
+  To return to the last place where you made changes in code, press ⇧⌘⌫ or select Navigate | Last Edit Location from the main menu.
+
+
+
+
+
+
+
+
+  ### Database Design
+  When designing a database schema consider the following steps:
+
+Define the purpose of your database
+Find the information that make up the database
+Organize your information into tables
+Structure your tables into columns of information
+Avoid redundant data that leads to inaccuracy and waste in space
+Identify the relationships between your tables and implement them
+The last two items ensure data accuracy and integrity anytime you need to add or update information in the database. It also makes querying the database much more efficient.
+
+You can design database schemas by hand or by software. Here are a few examples of free online database design tools:
+
+DbDiagram.io - a free, simple tool to draw ER diagrams by just writing code, designed for developers and data analysts.
+SQLDBM - SQL Database Modeler
+DB Designer - online database schema design and modeling tool 
+
+
+postgres non integer types:
+Table 8-2. Numeric Types
+
+Name	Storage Size	Description	Range
+smallint	2 bytes	small-range integer	-32768 to +32767
+integer	4 bytes	typical choice for integer	-2147483648 to +2147483647
+bigint	8 bytes	large-range integer	-9223372036854775808 to 9223372036854775807
+decimal	variable	user-specified precision, exact	no limit
+numeric	variable	user-specified precision, exact	no limit
+real	4 bytes	variable-precision, inexact	6 decimal digits precision
+double precision	8 bytes	variable-precision, inexact	15 decimal digits precision
+serial	4 bytes	autoincrementing integer	1 to 2147483647
+bigserial	8 bytes	large autoincrementing integer	1 to 9223372036854775807
+
+
+#add a bunch of stuff to a table at once:
+--INSERT INTO films(name,release_year)
+--VALUES
+ --   ('The Matrix',1999),
+ --   ('Monster’s Inc.', 2001),
+ --  ('Call Me By Your Name',2017);
