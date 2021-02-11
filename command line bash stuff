@@ -218,3 +218,24 @@ $ cat file.txt
 camelCase
 $ sed -r 's/([a-z]+)([A-Z][a-z]+)/\1_\l\2/g' file.txt
 camel_case
+
+
+##how can you delete or remove ##
+a batch of files or a file from a folder using command line 
+
+rm ./folder_name/files_to_delete_number_*
+
+that should delete all the files
+
+really good full info on remove directories rmdir or rm:
+https://www.howtogeek.com/409115/how-to-delete-files-and-directories-in-the-linux-terminal/
+
+
+delete every file inside of directoreis:
+use rm -r ./directory/*
+
+delete a directory
+rmdir directory
+
+you can force things but be super duper careful:
+rmdir -rf directory

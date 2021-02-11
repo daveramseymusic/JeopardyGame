@@ -1,10 +1,19 @@
+## Fun newest stuff ##
+
+    ##how can you delete or remove ##
+    a batch of files or a file from a folder using command line 
+
+    rm ./folder_name/files_to_delete_number_*
+
+    that should delete all the files
 
 
-To drag an entire text line up or down use: 
-"start/alt/opt" + up 
+
+    To drag an entire text line up or down use: 
+    "start/alt/opt" + up 
 
 
-To stop the running code: use shortcut Ctrl+Alt+M. or press F1 and then select/type Stop Code Run.
+    To stop the running code: use shortcut Ctrl+Alt+M. or press F1 and then select/type Stop Code Run.
 
 
 ## From the Fast AI course
@@ -19,6 +28,12 @@ learn markdown its super easy and useful for jupyter Notebooks
 #look at last five entries in csv:
 
 print(file.tail())
+
+
+
+
+
+
 
 
 
@@ -324,14 +339,7 @@ b_clicks = ad_clicks[ad_clicks.experimental_group =='B']
         #or to filter by column comparison
 crushing_it = sales_vs_targets[sales_vs_targets.revenue > sales_vs_targets.target]
 
-
-#Filter out a list of names called some_values = [] from a df or dataframe from one column.
-#this page explains all this really well: https://stackoverflow.com/questions/17071871/how-to-select-rows-from-a-dataframe-based-on-column-values
-
-# df.loc[df['column_name'].isin(some_values)]
-
-
-#UPDATE: this is the dumb way for lots of names LOOK ABOVE for better way.filter out all states and counties I want to use for covid df use the example just below this line:
+#filter out all states and counties I want to use for covid df use the example just below this line:
 # df.query('col1 <= 1 & 1 <= col1'):
 nyt_filtered = nyt.query('state == "texas" or state == "pennsylvania" or state == "colorado" or state == "california"')
 nyt_filtered = nyt_filtered.query('county == "tarrant" or county == "philadelphia" or county == "san_diego" or county == "douglas"')
@@ -499,9 +507,6 @@ df = df_orig.copy()
 jeopardy['value'] = jeopardy['value'].apply(lambda x: x.replace('$', '').replace(',', '').replace('None','0')
                                 if isinstance(x, str) else x).astype(float)
 print(jeopardy.dtypes)
-#note: you CAN use .apply to the entire df eg df.apply(lambda x: ...) that is actually the point here. 
-to run this to clean up the entire df.
-
 
 #how to detect if something is datetime try using this.  will be boolean so use in a lambda
 
@@ -1402,14 +1407,6 @@ plt.pie(budget_data,
 ##using the percent change built in pandas function:
 percentages['percent_left'] = percentages.total.pct_change()
 
-#my test df dataframe built quickly:
-df_dic = {'samp': ['foo', "bar", 'bit', 'baz', 'bink'],
-           'num' :  [23, 34, 456, 234, 8]
-            }
-df = pd.DataFrame(df_dic)
-print(df)
-
-
 #how to build your own data frame from dictionaries create new dataframe df :
 df_dic = {'question': ['1. What are you looking for?', "2. What's your fit?", '3. Which shapes do you like?', '4. Which colors do you like?', '5. When was your last eye exam?'],
            'total' :  [500, 475, 380, 361, 270]
@@ -1571,7 +1568,7 @@ def random_genders(size, p=None):
 
 
 
-#more full explanation of the multiplication to make it day or minute or minute and seconds...
+#more full explanation of the multiplication to make it `day` or minute or minute and seconds...
 def random_datetimes_or_dates(start, end, out_format='datetime', n=10): 
 
     '''   
@@ -1996,7 +1993,7 @@ Kaggle Data sets:
 
 
 ## Cleaning Dad's Solar Exel sheet csv ##
-``change columns header reset_index reset index
+change columns header reset_index reset index
     ##  Here the columns were actually nul values and the first row had what I wanted as the columns.  Also there was a blank column[0] I wanted to get rid of.
     Also the dates might as well be the index so I might change that too.
 
@@ -2140,32 +2137,10 @@ db.ws_names
 
 
 
-##Reggies Linear Regression ##
-
-#find the smallest error
-
-possible_ms = [m * 0.1 for m in range(-100, 101)]
-possible_bs = [b * 0.1 for b in range(-200, 201)]
-
-datapoints = [(1, 2), (2, 0), (3, 4), (4, 4), (5, 3)]
-smallest_error = float("inf")
-best_m = 0
-best_b = 0
-
-for m in possible_ms:
-    for b in possible_bs:
-   	 error = calculate_all_error(m, b, datapoints)
-   	 if error < smallest_error:
-   		 best_m = m
-   		 best_b = b
-   		 smallest_error = error
-       	 
-
-print(best_m, best_b, smallest_error)
-
-
-
 ## Dad's Solar Project Learnings: ##
+
+note: the two files used here are the one I copied,"exceltab_to_csv.py"
+and the one I made to clean that up, connect_csvs.py"
 
 If there are 3 column headers: "col1\n", "col2xtms","col3\n"
 how can you clean off the \n and why is it difficut:
@@ -2189,114 +2164,30 @@ cols = [i.str.replace(r'\\n','').str.replace('xtms','')
 df.columns = cols
 
 
-## This is how you create a column of datetime and coerce non-date times into NaT: ##
-note: format indicates what format string is already in.
+## How to add or subtract a year or years from a column or series of #
+# of timestamp aka type(col[1]) = 
+# <class 'pandas._libs.tslibs.timestamps.Timestamp'>
+
+# df['NEW_DATE'] = df['ACC_DATE'] - pd.DateOffset(years=1)
+october[col1] = october[col1]- pd.DateOffset(years=70)
 
 
-# df.date = pd.to_datetime(df.date, format='%Y%m%d', errors='coerce')
+## From Reggies Regression ##
 
-may.date = pd.to_datetime(may.date,format='%Y%md',errors='coerce')
-
-## This is how you take a column that is in datetime with seconds and
-truncate it so it only shows the date.  
-
-import datetime as dt
-
-df['col'] = df['col'].dt.date
-
-##  Drop any row with Na NaT or NaN using .dropna() ##
-note: go here for excellent explanation: https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.dropna.html
+good search for the least error using two variables:
 
 
-#use df.dropna(axis=0, how=any, inplace=True)
-may.dropna(axis=0, how='any', inplace=True)
+datapoints = [(1, 2), (2, 0), (3, 4), (4, 4), (5, 3)]
+smallest_error = float("inf")
+best_m = 0
+best_b = 0
 
-
-## How to extract the file name from a file path:
-from:   https://www.kite.com/python/answers/how-to-extract-the-last-folder-or-the-file-from-a-path-in-python#:~:text=normpath(path)%20to%20remove%20extra,part%20of%20the%20original%20path.
-
-a_path = '/Users/davidramsey/Documents/coding/solar/Oct_Meter_Readings_test/May'
-
-without_extra_slash = os.path.normpath(a_path)  
-
-last_part = os.path.basename(without_extra_slash)
-
-print(last_part)
-
-
-## how to save file names from a directory into a python list so you can iterate throught the list and clean each file- Google Search ##
-#answer is here in both simple and better for memory versions: https://stackoverflow.com/questions/40371873/python-read-filenames-and-save-in-list
-
-import os
-import os.path
-
-file_list = os.listdir("jsons") #import the filenames of everything in the directory
-
-for file_name in file_list:
-    #join the filename to the directory path then open it so you can mess with it. 
-    with open(os.path.join("jsons", file_name), "r") as src_file: 
-        #save it as a readable file then print the file
-        data = src_file.read()
-        print(data)
-
-
-#Here is what I did on solar project:
-dr_name = '/Users/davidramsey/Documents/coding/solar/Oct_Meter_Readings_test'
-file_list = os.listdir('/Users/davidramsey/Documents/coding/solar/Oct_Meter_Readings_test')
-for file in file_list:
-    #connect the directory and file then open it so you can fuck with it
-    with open(os.path.join(dr_name,file), mode = 'r') as src_file:
-        #print something to confirm it's working
-        print(str('this file!: ') + file)
-        #close the file
-        src_file.close()
-
-
-
-#how does open() work in python - Google Search 
-
-# opens the file in reading mode
-f = open("path_to_file", mode='r')
-
-# opens the file in writing mode 
-f = open("path_to_file", mode = 'w')
-
-# opens for writing to the end 
-f = open("path_to_file", mode = 'a')
-
-Python's default encoding is ASCII. You can easily change it by passing the encoding parameter.
-
-f = open("path_to_file", mode = 'r', encoding='utf-8')
-
-
-
-Debugging:  
-F5: to start debugging or iterate to the next stop
-Shift+ F5 Stop debugging
-F10: over to next line
-F11: loop into deeper scope
-Shift +F11: loop out of deeper scope into broader scope
-Shift + CMD + F5 : rerun debugger fresh from the top
-Shift + CMD + Y = open degubber consol instead of terminal
-Shif + CMD + D = open debugging Run window
-
-If ever confuse:
-
-1. slow down
-2.  put a break point
-3. work through the lines of code one at a time
-4. write out your variables
-5.  print out your variables
-
-
----
-explain the logic of Not True ect. with numbers. then remember the negation part
-if True =1 False = 0
-Not true = 0(false
-1-1(true) = 0(false)
-1-0(false = 1 (true)
-
-you can also start getting wild.  If you substitute a probablility for True or false aka 1 or 0.  like .25
-
-so NOT .25  goes to 1-.25 = .75
-that it so far.
+for m in possible_ms:
+    for b in possible_bs:
+   	 error = calculate_all_error(m, b, datapoints)
+   	 if error < smallest_error:
+   		 best_m = m
+   		 best_b = b
+   		 smallest_error = error
+       	 
+print(best_m, best_b, smallest_error)
