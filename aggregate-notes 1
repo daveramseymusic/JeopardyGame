@@ -788,7 +788,7 @@ pd.merge(
 )
 
 #outer merge
-pd.merge(company_a, company_b, how='outer')
+`pd.merge(company_a, company_b, how='outer')
 
 #possible way to left merge:
 df1.merge(df2, how='left')
@@ -2271,6 +2271,10 @@ f = open("path_to_file", mode = 'r', encoding='utf-8')
 
 
 Debugging:  
+
+Shortcuts:
+F9: place a break in the line of code wher the curser is.
+
 F5: to start debugging or iterate to the next stop
 Shift+ F5 Stop debugging
 F10: over to next line
@@ -2280,10 +2284,15 @@ Shift + CMD + F5 : rerun debugger fresh from the top
 Shift + CMD + Y = open degubber consol instead of terminal
 Shif + CMD + D = open debugging Run window
 
+crtl +alt + left/right : split screen.  current tab moves to right.
+
+FINALLY!! 
+fn + start/alt/opt : gives you a multiple cursur!!!
+
 If ever confuse:
 
 1. slow down
-2.  put a break point
+2.  put a break point  -- F9
 3. work through the lines of code one at a time
 4. write out your variables
 5.  print out your variables
@@ -2300,3 +2309,89 @@ you can also start getting wild.  If you substitute a probablility for True or f
 
 so NOT .25  goes to 1-.25 = .75
 that it so far.
+
+
+
+
+Define in which columns to look for missing values.
+https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.dropna.html
+
+df.dropna(subset=['name', 'toy'])
+       name        toy       born
+1    Batman  Batmobile 1940-04-25
+2  Catwoman   Bullwhip        NaT
+
+
+# In solar data cleaner I used this to insert a list of columns to dropna():
+#for a bit, then I changed it.
+csv_file.dropna(subset=datelike_header, inplace=True)
+
+
+# substituted .replace() all empty strings with na or Nan value so dropna() 
+works cleaner.
+
+    #sub all empty elements with NaN
+    
+    nan_value = float("NaN")
+    
+    # df.replace("",nan_value,inplace)
+    csv_file[cols2].replace("", nan_value, inplace=True)
+
+
+
+## Things That almost worked in solar cleaning with multiple columns
+that had the word 'date' in them:
+
+# # Clean out any na columns and reset index
+    # # #use df.dropna(axis=0, how=any, inplace=True)
+    # csv_file[datelike_header].dropna(axis=0, how='any', inplace=True)
+    
+    
+    # df = df.loc[df['samp'].notnull()]
+    
+    # #create for loop so col_name is one variable not a list
+    # for col_name in datelike_header:
+    #     csv_file = csv_file[col_name].dropna()
+
+    # csv_file.dropna(thresh=8,subset=datelike_header, inplace=True)
+
+    
+    
+    # csv_file = csv_file[(csv_file['date'] != '')]
+    
+    
+    # csv_file = csv_file[~csv_file[datelike_header].isin([''])]
+    # df = df[(df[datelike_header] != '')]
+    # csv_file = csv_file[(csv_file[datelike_header] != '')]
+
+    
+    # #reset the index of csv_file
+    # csv_file = csv_file.reset_index(inplace=True, drop=True)
+    
+    ## drop the date column to make everything else numeric
+    # cols = df.columns.drop('id') 
+    # df[cols] = df[cols].apply(pd.to_numeric, errors='coerce')
+
+
+
+## Stuff I added to my notes to see if the columns matched between 
+between solar csvs ##
+
+#make old_cols equal cleaned columns:
+    new_cols = cleaned_file.columns
+    # compare old cols 
+    
+    #make sure you skip the the first csv as theres nothing to compare:
+    if csv_count > 1:
+        col_diff = new_cols.difference(old_cols)
+    old_cols = cleaned_file.columns
+    
+    print(' Diff: ')
+    print( col_diff)
+    return old_cols
+
+
+
+# good ways to join/merge two lists: https://thispointer.com/python-how-to-merge-two-or-more-lists/
+#what I used:
+all_cols.extend(new_cols)
