@@ -2035,7 +2035,7 @@ my_data.set_index('Date and Time', inplace=True)
 
 
 
-## reorder move change order columns ##
+## reorder move change order columns rearrange##
 
 
 best examples: https://stackoverflow.com/questions/35321812/move-column-in-pandas-dataframe
@@ -2073,7 +2073,7 @@ monthly_data['Month'] = monthly_data['Month'].dt.to_period('M')
 ## a grouping key is a column or row that will be used to combine in a .groupby() operation. eg: df['Month] or df['blue']
 
 ##if you use df.groupby(['col']).mean() it will take any numerical columns and return their average based on 'col'.
-if there isn't a numerical column it is called a 'nuisance' column  and will be excluded from the output.
+if there isn't a numerical column it is called a 'nuisance' column    and will be excluded from the output.
 
 
 ##  Script for moving multiple xlsx sheets in one xl workbook  into multiple CSV files: ##
@@ -2395,3 +2395,51 @@ between solar csvs ##
 # good ways to join/merge two lists: https://thispointer.com/python-how-to-merge-two-or-more-lists/
 #what I used:
 all_cols.extend(new_cols)
+
+
+
+# use pandas date_range() for creating a list of datetime entries:
+
+pd.date_range(start='1/1/2018', end='1/08/2018')
+DatetimeIndex(['2018-01-01', '2018-01-02', '2018-01-03', '2018-01-04',
+               '2018-01-05', '2018-01-06', '2018-01-07', '2018-01-08'],
+              dtype='datetime64[ns]', freq='D')
+
+
+# Rearrange column order last column to first reorder order column:
+cols = df.columns.tolist()
+#note: these must be in reference to the rest of the list.
+    #   like cols[1:]  NOT cols[3]
+#move last column to first column
+cols = cols[-1:] + cols[:-1]
+df = df[cols]               
+
+
+#how to check for date typos #
+
+    #ignore this line if you alredy have typos:
+    #create a typo:  change a date entry. subtact one year minus one year to the wrong year:
+    df.loc[3, 'dates'] = df.loc[3, 'dates'] - pd.Timedelta(days=365)
+
+    #create a column of the differences between dates:
+    df['date_diff'] = df.dates.diff()
+    #create a column that says true if dates are not within 1 day:
+    df['double check'] = df['date_diff'] == pd.Timedelta(days=1)            
+
+
+## how to print daterange in a column of datetime pandas  ##
+
+    df[df.date.between('2016-01', '2016-06')]
+    That gives:
+
+        date
+    0  2016-01
+    1  2016-02
+
+    It works because ISO 8601 date strings can be sorted as if they were plain strings. 
+    '2016-06' comes after '2016-05' and so on.
+
+    #Here is what I did to check solar date oddities:
+    #it worked despite the dates already being in datetime type
+
+    my_data = my_data[my_data['date_cleaned'].between('2020-01-14', '2020-01-18')]    
