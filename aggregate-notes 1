@@ -231,8 +231,7 @@ Now, we can more easily see the differences between the blue set and the orange 
  # Filtering a dataset by a list of words
 
 def filter_data(data, words):
-  #lowercase all words in the list of words as well as the questions. Return true if all of the words in the 
-    list appear in the question:
+  #lowercase all words in the list of words as well as the questions. ankik
   filter = lambda x: all(word.lower() in x.lower() for word in words)
   # Applies the labmda function to the Question column and returns the rows where the function returned True
   return data.loc[data["Question"].apply(filter)]
@@ -406,6 +405,7 @@ nyt_filtered_san_diego.columns = listn #resave df.columns as your new list
 ## jeopardy.columns = jeopardy.columns.str.strip().str.lower().str.replace(' ', '_').str.replace('(', '').str.replace(')', '')
 
 # jeopardy = jeopardy.rename(columns={' air_date':'air_date',' round':'round',' category':'category',' value': 'value',' question': 'question', ' answer': 'answer'})
+##columns lambda x column lambda 
 # jeopardy.rename(columns=lambda x: x.strip(), inplace=True)
 jeopardy.columns = [col.lstrip() for col in jeopardy.columns]
 # to turn all column headers to strings
@@ -2443,3 +2443,115 @@ df = df[cols]
     #it worked despite the dates already being in datetime type
 
     my_data = my_data[my_data['date_cleaned'].between('2020-01-14', '2020-01-18')]    
+
+
+
+## Ways to find the difference between dates or coloumn elements in succession: ##
+
+.pct_change()
+Dataframe.pct_change
+Percent change over given number of periods.
+
+.shift()
+Dataframe.shift
+Shift index by desired number of periods with an optional time freq.
+
+.diff()
+Series.diff
+First discrete difference of object.
+
+
+## how to use the .where() function:
+m = df % 3 == 0
+df.where(m, -df)
+   A  B
+0  0 -1
+1 -2  3
+2 -4 -5
+3  6 -7
+4 -8  9
+
+
+
+
+##  Fast.AI ##
+Markdown Here Cheatsheet:
+https://github.com/adam-p/markdown-here/wiki/Markdown-Here-Cheatsheet 
+
+
+
+proxy = arrests
+value = crime in the arrests for marijuana discussion
+
+
+likely useful: 
+1hr 7min in video:
+cool thing about repl: type the name of a function into a spac e
+
+
+
+Jupyter Notebook Key Shortcuts:
+Shift+Enter:: Run the code or markdown on a cell
+
+Up Arrow+Down Arrow:: Toggle across cells
+
+b:: Create new cell
+
+0+0:: Reset Kernel
+
+You can find more shortcuts by typing h (for help).
+
+Jupyter notebooks are great for experimenting and immediately seeing the results of each function, but there is also a lot of functionality to help you figure out how to use different functions, or even directly look at their source code. For instance, if you type in a cell:
+
+??verify_images
+a window will pop up with:
+
+Signature: verify_images(fns)
+Source:   
+def verify_images(fns):
+    "Find images in `fns` that can't be opened"
+    return L(fns[i] for i,o in
+             enumerate(parallel(verify_image, fns)) if not o)
+File:      ~/git/fastai/fastai/vision/utils.py
+Type:      function
+This tells us what argument the function accepts (fns), then shows us the source code and the file it comes from. Looking at that source code, we can see it applies the function verify_image in parallel and only keeps the image files for which the result of that function is False, which is consistent with the doc string: it finds the images in fns that can't be opened.
+
+
+## Jupyter Notebook Shortcuts:
+Here are some other features that are very useful in Jupyter notebooks:
+
+At any point, if you don't remember the exact spelling of a function or argument name, you can press Tab to get autocompletion suggestions.
+When inside the parentheses of a function, pressing Shift and Tab simultaneously will display a window with the signature of the function and a short description. Pressing these keys twice will expand the documentation, and pressing them three times will open a full window with the same information at the bottom of your screen.
+
+In a cell, typing ?func_name and executing will open a window with the signature of the function and a short description.
+
+In a cell, typing ??func_name and executing will open a window with the signature of the function, a short description, and the source code.
+
+If you are using the fastai library, we added a doc function for you: executing doc(func_name) in a cell will open a window with the signature of the function, a short description and links to the source code on GitHub and the full documentation of the function in the library docs.
+
+Unrelated to the documentation but still very useful: to get help at any point if you get an error, type %debug in the next cell and execute to open the Python debugger, which will let you inspect the content of every variable.
+
+A Bit of Deep Learning Jargon
+Samuel was working in the 1960s, and since then terminology has changed. Here is the modern deep learning terminology for all the pieces we have discussed:
+
+The functional form of the model is called its architecture (but be careful—sometimes people use model as a synonym of architecture, so this can get confusing).
+The weights are called parameters.
+The predictions are calculated from the independent variable, which is the data not including the labels.
+The results of the model are called predictions.
+The measure of performance is called the loss.
+The loss depends not only on the predictions, but also the correct labels (also known as targets or the dependent variable); e.g., "dog" or "cat."/
+
+-shortcuts from fast.ai:
+
+to find out what a function is and where it comes from you can do a few things:
+-doc()
+like doc(path.ls)  
+will show you the actual source code from fast.ai
+-??path.ls()  will show you the purpose and parameters of the function
+-path.ls?  will show a lot too at least maybe  
+
+how to find out what type of tensor?
+similar to python type()
+
+you do tensor.type()
+and it tells you what type of tensor it 
