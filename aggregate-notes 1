@@ -1,5 +1,3 @@
-
-
 To drag an entire text line up or down use: 
 "start/alt/opt" + up 
 
@@ -12,6 +10,9 @@ To stop the running code: use shortcut Ctrl+Alt+M. or press F1 and then select/t
 press 'h' to pull up the shortcuts menu
 #use formatted text which is done in 'markdown'
 learn markdown its super easy and useful for jupyter Notebooks
+
+#use this to insert website into markdown:
+### The functions were copied from Matthew SF Choo's article [HERE](https://scientistwhostayed.medium.com/making-nlp-predictions-on-new-datasets-using-fast-ai-4a9be5e07ba1)
 
 
 
@@ -143,6 +144,18 @@ df['x'].str.lower()
 #or this works if its already a string
 df.['x'] = df['x'].lower()
 
+I used this with munchkin df:
+
+#format the columns all columns into title case to match template
+# tx_cl.str.title()
+
+tx_cl.apply(lambda x: x.astype(str).str.title())
+
+# turn the state column back into UPPER
+tx_cl.state.astype(str).str.upper()
+
+
+
 -
 ##How do we use the Python string formatters %d and %f?
 Answer
@@ -181,7 +194,9 @@ The histogram above, for example(simple 10bar one), was created with the followi
 
 plt.hist(dataset) 
 plt.show()
-If we want more than 10 bins, we can use the keyword bins to set how many bins we want to divide the data into. The keyword range selects the minimum and maximum values to plot. For example, if we wanted to take our data from the last example and make a new histogram that just displayed the values from 66 to 69, divided into 40 bins (instead of 10), we could use this function call:
+If we want more than 10 bins, we can use the keyword bins to set how many bins we want to divide the data into. The keyword range selects the minimum and maximum values to plot.
+ For example, if we wanted to take our data from the last example and make a new histogram that just displayed the values from 66 to 69, divided into 40 bins (instead of 10),
+  we could use this function call:
 
 plt.hist(dataset, range=(66,69), bins=40)
 
@@ -295,6 +310,15 @@ booleans = [True, False, True]
 opposite = [not i for i in booleans]
 
 
+# remove duplicates from a list:
+my_list = [1,2,2,3,1,4,5,1,2,6]
+
+
+my_finallist = []
+[my_finallist.append(n) for n in my_list if n not in my_finallist] 
+print(my_finallist)
+
+
 
 ### Data Frames ###
 
@@ -329,6 +353,14 @@ crushing_it = sales_vs_targets[sales_vs_targets.revenue > sales_vs_targets.targe
 
 # df.loc[df['column_name'].isin(some_values)]
 
+#filter all rows that contain this string:
+ndfc.loc[ndfc['type'].str.contains(',')]
+
+#filter all rows that contain this regex:
+th = df[df['Region'].str.contains('th$')]
+
+## Best site for filtering Pandas dfs:  https://datagy.io/filter-pandas/#select-dataframe-regex
+
 
 #UPDATE: this is the dumb way for lots of names LOOK ABOVE for better way.filter out all states and counties I want to use for covid df use the example just below this line:
 # df.query('col1 <= 1 & 1 <= col1'):
@@ -352,8 +384,23 @@ def get_answer_counts(data):
 ##how do you turn one element fromm a df into a variable.
     #Choose row and column of element
 df2 = df.loc[(df.column1 == 'row_i_like'), ['column_i_like']]
+
+##note: to do multiple columns:
+df.loc[df['saleElapsed'] == df['saleElapsed'].max(), ['saleYear', 'saleMonth']]    
+    
+    
+    
+    
     #use .sum() to turn it into an integer
 variable = df.column_i_like.sum()
+
+## Sum multiple columns to one:
+df['Fruit Total']= df.iloc[:,-4:-1].sum(axis=1)
+
+    #Used to sum homohobia columns:
+    k['sum_col'] = k[['toxic', 'severe_toxic', 'obscene', 'threat',
+       'insult', 'identity_hate']].sum(axis=1)
+
 
 # Specifying each value in the new column:
 df['newColumn'] = [1, 2, 3, 4]
@@ -435,6 +482,7 @@ clicks_pivot['percent_clicked'] = \
    (clicks_pivot[True] + 
     clicks_pivot[False])
 
+
 #cool lambda thing is that you can save a lambda like a function to a single variable name:
 
 long_string = lambda str: len(str) > 12
@@ -483,6 +531,7 @@ df.columnName.min() # Minimum value in column
 df.columnName.count() # Number of values in column
 df.columnName.nunique() # Number of unique values in column
 df.columnName.unique() # List of unique values in column
+    note: use .drop_duplicates('col') if you want to filter only unique rows
 
 #to change a whole column to a float use this:
 df['DataFrame Column'] = df['DataFrame Column'].astype(float)
@@ -507,6 +556,7 @@ to run this to clean up the entire df.
 
 ok so for some reason this worked:
 isinstance(x, datetime)  NOT this: isinstance(now, datetime.datetime)   
+
 
 #This was the equation that worked:
 c_cov.iloc[:,1] = c_cov.iloc[:,1].apply(lambda x: x.parse()
@@ -541,7 +591,8 @@ col_names = df.columns[:]
 
 # np.percentile can calculate any percentile over an array of values
 #note: "np." is simply part of the 'command' so just copy it in
-high_earners = df.groupby('category').wage
+high_earners = df.
+('category').wage
     .apply(lambda x: np.percentile(x, 75))
     .reset_index()
 
@@ -550,6 +601,12 @@ df.groupby(['Location', 'Day of Week'])['Total Sales'].mean().reset_index()
 
 #other example using id works well for "count."
 shoe_counts = orders.groupby(['shoe_type', 'shoe_color']).id.count().reset_index()
+
+#used for VA Governor Race to have only unique users and sum up the number per day for each candidate:
+df.groupby(['day','polarity']).user.nunique().reset_index()
+
+
+
 
 #super simple pivot  using .set_index This will move your entire table using a specific column as your index. 
 #used in covid
@@ -802,6 +859,9 @@ df1.merge(df2, how='left')\
 # This method only works if all of the columns are the same in all of the DataFrames.
 pd.concat([df1, df2, df2, ...])
 
+#used this in munchkins.  NOTE! didn't work until I added axis=0, ignore_index=True 
+#also note, i was concatenating a list of csv names
+website_hours_scraped = pd.concat((pd.read_csv(f) for f in csvs), axis=0, ignore_index=True)
 
 #how to drop duplicate rows in a dataframe df at least duplicate user id or the same entries
 .drop_duplicates(subset='user_id')
@@ -818,7 +878,8 @@ my_dict = {i:MyList.count(i) for i in MyList}
 {'a': 3, 'c': 3, 'b': 1}
 
 
-#drop method I have used:
+#
+method I have used:
 my_data.drop('Unnamed: 0', axis=1, inplace=True)
 my_data.drop('Unnamed: 0', axis=1, drop=True) #this drops the old index and resets everything.
 
@@ -866,6 +927,11 @@ x_values = [0, 1, 2, 3, 4]
 y_values = [0, 1, 4, 9, 16]
 plt.plot(x_values, y_values)
 plt.show()
+
+
+# Horizontal line at 0 create  a line at zero in graph
+plt.hlines(y= 0,  xmin=xmin, xmax=xmax,color='red', linestyle ='dashed', linewidth = 4)
+
 
 
 #if x and y do not have the same number of elements you can maybe do this:
@@ -1086,6 +1152,7 @@ plt.savefig('subfolder/filename.png')
 
 
 
+
 #BAR CHART: Here is an example of how to make a bar chart using plt.bar to compare the number of days in a year on the different planets:
 days_in_year = [88, 225, 365, 687, 4333, 10756, 30687, 60190, 90553]
 plt.bar(range(len(days_in_year)),
@@ -1112,8 +1179,10 @@ data["Date"]= pd.to_datetime(data["Date"])
 
 ##resets columns so some are now dates.
 #df.columns = df.columns[:1].tolist() + pd.to_datetime(df.columns[1:]).tolist()
-## use for days
+## use for days:
+note: did not work on recent solar data
 # df.columns = pd.to_datetime(df.columns).to_period('D')
+
 
 ## Create a 'Month' column from a date column
 df['month'] = df['Date'].dt.strftime('%b')
@@ -1150,7 +1219,7 @@ df.columns = new_header #set the header row as the df header
 
 d1 = datetime.date(2008, 3, 12)
 
-#all datetime date time function are liste here:
+ #all datetime date time function are liste here:
 https://pymotw.com/2/datetime/#:~:text=You%20can%20use%20datetime%20to,date%20to%20produce%20another%20date.
 
 
@@ -1713,6 +1782,7 @@ next_year = []
 for row in df['year']:
     # Add 1 to the row and append it to next_year
     next_year.append(row + 1)
+
 #nside password_generator create a for loop that iterates through the indices username by going from 0 to len(username).
 #use a for loop to move the last letter of a string to the front (pretty good idea uing range that starts on -1)
 def password_generator(user_name):
@@ -1812,6 +1882,12 @@ restaurants['url'] = restaurants['url'].str.lstrip('www.')
 
     # Line chart showing daily global streams of each song 
     sns.lineplot(data=spotify_data)
+
+    # quick graph of a simple df
+    import seaborn as sns
+    sns.lineplot(y=dfrd.polarity, x=dfrd.rdate)
+
+
 
 
 ## how to set the size of the chart and change the title 
@@ -2057,6 +2133,13 @@ note: you cannot try to simply place a list like df = df[['my_list'] + [c for c 
 
 monthly_data = my_data
 
+
+#I used the following in the munchkin project.  Just type names of the columns in the order you want and it works:
+
+tx_cl = tx_cl[['school_name', 'phone_number', 'email', 'provider_type', 'address', 'city', 'state', 'zip','ages']]
+
+
+
 #BEST WAY is .dt.month or .dt.year
 
 monthly_data['Month'] = monthly_data['Date and Time'].dt.month
@@ -2195,14 +2278,13 @@ note: format indicates what format string is already in.
 
 # df.date = pd.to_datetime(df.date, format='%Y%m%d', errors='coerce')
 
-may.date = pd.to_datetime(may.date,format='%Y%md',errors='coerce')
+may.date = pd.(may.date,format='%Y%md',errors='coerce')
 
 ## This is how you take a column that is in datetime with seconds and
 truncate it so it only shows the date.  
 
 import datetime as dt
 
-df['col'] = df['col'].dt.date
 
 ##  Drop any row with Na NaT or NaN using .dropna() ##
 note: go here for excellent explanation: https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.dropna.html
@@ -2281,8 +2363,7 @@ F10: over to next line
 F11: loop into deeper scope
 Shift +F11: loop out of deeper scope into broader scope
 Shift + CMD + F5 : rerun debugger fresh from the top
-Shift + CMD + Y = open degubber consol instead of terminal
-Shif + CMD + D = open debugging Run window
+Shift + CMD + D = open debugging Run window
 
 crtl +alt + left/right : split screen.  current tab moves to right.
 
@@ -2446,6 +2527,13 @@ df = df[cols]
 
 
 
+##use pd.to_datetime to save todays date as a variable:
+
+note: this does not work on a series or col
+x = pd.to_datetime('today').date()
+
+
+
 ## Ways to find the difference between dates or coloumn elements in succession: ##
 
 .pct_change()
@@ -2555,3 +2643,1329 @@ similar to python type()
 
 you do tensor.type()
 and it tells you what type of tensor it 
+
+
+
+
+
+
+
+##Reddit PushShift PRAW PSAW API ##
+
+#how to load a jason and read it if it's nested:
+
+import json
+# load data using Python JSON module
+with open('data/nested_array.json','r') as f:
+    data = json.loads(f.read())
+# Flatten data
+df_nested_list = pd.json_normalize(data, record_path =['students'])
+
+
+
+how to load nd turn to dataframe if not nested from a URL:
+URL = 'http://raw.githubusercontent.com/BindiChen/machine-learning/master/data-analysis/027-pandas-convert-json/data/simple.json'
+df = pd.read_json(URL)
+
+## create folder if it doesn't exist:
+data_folder = "./data_files/"
+file_name = "12-2020"
+
+CHECK_FOLDER = os.path.isdir(data_folder)
+
+# If folder doesn't exist, then create it.
+if not CHECK_FOLDER:
+    os.makedirs(data_folder)
+    print("created folder : ", data_folder)
+
+
+
+
+## regular expressions regex
+
+
+w matches alphanumeric characters, which means a-z, A-Z, and 0-9. It also matches the underscore, _, and the dash, -.
+d matches digits, which means 0-9.
+s matches whitespace characters, which include the tab, new line, carriage return, and space characters.
+S matches non-whitespace characters.
+. matches any character except the new line character n.
+
+
+
+## Regex characters from https://www.fon.hum.uva.nl/praat/manual/Regular_expressions_1__Special_characters.html
+The following characters are the meta characters that give special meaning to the regular expression search syntax:
+
+\ the backslash escape character.
+The backslash gives special meaning to the character following it. For example, the combination "\n" stands for the newline, one of the control characters. The combination "\w" stands for a "word" character, one of the convenience escape sequences while "\1" is one of the substitution special characters.
+    Example: The regex "aa\n" tries to match two consecutive "a"s at the end of a line, inclusive the newline character itself.
+    Example: "a\+" matches "a+" and not a series of one or "a"s.
+^ the caret is the anchor for the start of the string, or the negation symbol.
+    Example: "^a" matches "a" at the start of the string.
+    Example: "[^0-9]" matches any non digit.
+$ the dollar sign is the anchor for the end of the string.
+    Example: "b$" matches a "b" at the end of a line.
+    Example: "^$" matches the empty string.
+{ } the opening and closing curly brackets are used as range quantifiers.
+    Example: "a{2,3}" matches "aa" or "aaa".
+[ ] the opening and closing square brackets define a character class to match a single character.
+The "^" as the first character following the "[" negates, and the match is for the characters not listed. The "-" denotes a range of characters. Inside a "[ ]" character class construction, most special characters are interpreted as ordinary characters.
+    Example: "[d-f]" is the same as "[def]" and matches "d", "e" or "f".
+    Example: "[a-z]" matches any lower-case characters in the alphabet.
+    Example: "[^0-9]" matches any character that is not an ASCII digit.
+    Example: A search for "[][()?<>$^.*?^]" in the string "[]()?<>$^.*?^" followed by a replace string "r" has the result "rrrrrrrrrrrrr". Here the search string is one character class and all the meta characters are interpreted as ordinary characters without the need to escape them.
+( ) the opening and closing parenthes3s are used for grouping characters (or other regexes).
+The groups can be referenced in both the search and the substitution phase. There also exist some special constructs with parentheses.
+    Example: "(ab)\1" matches "abab".
+. the dot matches any character except the newline symbol.
+    Example: ".a" matches two consecutive characters where the last one is "a".
+    Example: ".*\.txt$" matches all strings that end in ".txt".
+* the asterisk is the match-zero-or-more quantifier.
+    Example: "^.*$" matches an entire line.
++ the plus sign is the match-one-or-more quantifier.
+? the question mark is the match-zero-or-one quantifier. The question mark is also used in special constructs with parentheses and in changing match behaviour.
+| the vertical pipe separates a series of alternatives.
+    Example: "(a|b|c)a" matches "aa" or "ba" or "ca".
+< > the smaller and greater signs are anchors that specify a left or right word boundary.
+- the minus sign indicates a range in a character class (when it is not at the first position after the "[" opening bracket or the last position before the "]" closing bracket.
+    Example: "[A-Z]" matches any uppercase character.
+    Example: "[A-Z-]" or "[-A-Z]" match any uppercase character or "-".
+& the ampersand is the "substitute complete match" symbol.
+
+#Regex non-Pandas:
+
+    text_after = re.sub(regex_search_term, regex_replacement, text_before)
+
+    # my example:
+
+    queryx = 'I suck at stuff:0'
+    new = re.sub('\s','_', queryx)
+    new
+
+    ouput:  'I_suck_at_stuff:0'
+
+ 
+
+## convert to 'raw' string:
+
+fh = open(r"test_emails.txt", "r").read()
+
+This technique converts a string into a raw string, which helps to avoid conflicts 
+
+ caused by how some machines read characters, such as backslashes in directory paths on Windows.
+
+
+how does this work?
+for line in match:
+
+    print(re.findall("\w\S*@", line))
+
+
+#Concatenate a list of strings into one string: 
+join()
+
+## How combine multiple rows info into one row.
+
+cols = ['foo', 'bar', 'new']
+df['combined'] = df[cols].apply(lambda row: '_'.join(row.values.astype(str)), axis=1)
+
+
+
+
+I used this with munchkin df:
+
+#format the columns all columns into title case to match template
+# tx_cl.str.title()
+
+tx_cl.apply(lambda x: x.astype(str).str.title())
+
+# turn the state column back into UPPER
+tx_cl.state.astype(str).str.upper()
+
+## how to find the length of a df column in pandas
+len(df.index)
+df.shape[0]
+df[df.columns[0]].count() (slowest, but avoids counting NaN values in the first column)
+
+
+
+#how to get rid of null values NaN so you can turn a column into integers
+df = pd.DataFrame(Data)
+df['Price'] = pd.to_numeric(df['Price'],errors='coerce')
+df = df.replace(np.nan, 0, regex=True)
+df['Price'] = df['Price'].astype(int)
+
+print (df)
+print (df.dtypes)
+
+## Used on Solar to change dates:
+note: no need to use r'asdlfd' simply write regex=True, BUT you MUST use regex=True
+#locate rows where date < 2019-11-20 and use .replace() with regex to turn them to 2020 cause they wrooooong!
+conds = df.date_cleaned<'2019-11-20'
+m = df.loc[conds , 'date_cleaned'].replace('2019','2020', regex=True)
+
+
+
+
+## bash stuff I just lear
+ned before moving files 
+ls -a	list all files including hidden file starting with '.'
+ls --color	colored list [=always/never/auto]
+ls -d	list directories - with ' */'
+ls -F	add one char of */=>@| to enteries
+ls -i	list file's inode index number
+ls -l	list with long format - show permissions
+ls -la	list long format including hidden files
+ls -lh	list long format with readable file size
+ls -ls	list with long format with file size
+ls -r	list in reverse order
+ls -R	list recursively directory tree
+ls -s	list file size
+ls -S	sort by file size
+ls -t	sort by time & date
+ls -X	sort by extension name
+
+#This is how you get the first x number for files in your search with ls
+#this is good for moving all new files in the downloads folder
+ls -t1 ~/downloads | head -n 1
+
+#this is apparently how you save them all to another direcrtory
+    mv $(ls -t1 ~/downloads | head -n 1) ~/documents/my_new_directory
+
+#here is how you move multiple dirctories into another directory:
+    mv file1 file2 file3 -t DESTINATION
+        or this
+
+    mv -t <destination> <src1> <src2> .... <srnN>
+
+mv -t DESTINATION file1 file2 file3 ( I think)
+
+# Use this to sort ls by time and date recent files or csvs:
+    ls -t *.csv
+
+this is the page where it shows how to move a file from downloads
+https://stackoverflow.com/questions/38288718/trying-to-write-a-shell-script-to-move-most-recent-file-from-downloads-to-anothe
+
+
+##brew commands:
+brew UPDATE
+brew outdated
+brew upgrade
+https://youtu.be/SELYgZvAZbU?t=696
+
+
+#remove all older versions of packages    
+
+#diagnoses system and tells you about any issues it finds
+brew doctor 
+
+
+
+
+##Check which python version 
+!python --version
+
+#to see lots of info on a package
+pip show selenium
+
+use the ! to acces command line through jupyter notebook ipny or jnb
+
+##amazing tutorials from this guy!:
+http://jonathansoma.com/lede/foundations/classes/friday%20sessions/advanced-scraping-form-submissions-completed/
+
+
+
+## Timeit Time Jupyter Notebook :
+# to get a very accurate the time of an entire cell use:
+# this will run it 7 times and giver you a standard deviation of how long it will take
+# which is super good for extaplating how long it will take to run it 10 thousand times
+by only running it 7 times.
+
+%%timeit
+
+
+# if you only want to run this 2x to keep it simple:
+%%timeit #-r1
+
+# if you just want to see how long the cell takes:
+%%time
+
+# note if you use %timeit with only one '%' you will time a specific line which can be separated by semicolons 
+%time or %timeit
+
+
+## if having trouble with permissions go here 
+https://osxdaily.com/2020/04/27/fix-cron-permissions-macos-full-disk-access/
+
+
+# cron and crontab scheduling running scripts:
+
+Next, we need to add in a line describing the schedule frequency of how often we want the Python script to run. We input this in the order: minute, hour, day of the month, month, and day of the week. To leave one of these unspecified, place an asterisk (*) in that date / time slot.
+
+Example 1: Run script on the first day of each month at 2:03.
+
+1
+3 2 1 * * python /path/to/test_script.py
+
+from here http://theautomatic.net/2020/11/18/how-to-schedule-a-python-script-on-a-mac/
+
+
+Also schedule specific fucntions in an application:
+
+import schedule
+ 
+def test():
+    print("Test this out!")
+ 
+schedule.every(10).seconds.do(test)
+ 
+while True:
+    schedule.run_pending()
+
+
+
+## Scrapy:
+
+#using to overwrite a file use capital 'O' to append to a file use lower case 'o'
+(venv) (base) MacBook-Air-4:whiskyscraper3 davidramsey$ scrapy crawl whisky -O whisky.json
+
+#really good POST stuff for NYC scraping with scrapy
+
+
+##Regex used from nyc scraper:
+these are the websites:
+
+check your regex:
+https://pythex.org/
+
+tutorials:
+https://regexone.com/
+
+
+
+
+
+#Filtering Pandas nyc munchkin:
+#Filter all rows/elements that contain this string:
+#good site: https://datagy.io/filter-pandas/#select-dataframe-regex
+
+ndfc.loc[ndfc['type'].str.contains(',')]
+
+
+#Pandas regex used for recall gavin newsom:
+
+rx = r'#\w*' # get all hashtags
+df['regex'] = df.full_retweet_txt.str.findall(rx) #use findall() to save your regex as a separate column
+df['regex'][:10] # check the first 10 entries of the new columm
+
+
+
+
+
+
+
+## FastAI fast.ai:
+
+
+# use to quickly see all colunns with specific names
+
+' '.join(o for o in df.columns if o.startswith('sale'))
+
+
+# use to create lost of info from just a date column:
+
+df_test = add_datepart(df_test,'saledate')
+
+
+# use Categorify and FillMissing to quickly turn categories into numbers 
+and to fill missing values with the median value, then create a boolean column for "missing"
+
+procs = [Categorify, FillMissing]
+
+
+#  Split off a good test set from the test data using np.where and cond as a condition variable:
+#   you want to only use year < Nov,2011
+
+
+
+
+learned in chapter 9:
+
+df.loc[df['saleElapsed'] == df['saleElapsed'].max(), ['saleYear', 'saleMonth']]
+or 
+cols = ['saleYear', 'saleMonth']
+df.loc[df['saleElapsed'] == df['saleElapsed'].max(), cols]
+
+
+# Interesting way to create a series of column names  you want to keep:
+note: here fi.imp is fi['imp'] and its located inside fi.cols or fi['cols']
+
+to_keep = fi[fi.imp>0.005].cols
+len(to_keep)
+
+
+## Beautiful dictionary comprehension to quickly see the results of many adjusted random forest regressions:
+in this case it showed the OOB of the same df while dropping different columns individually:
+-it simply prints out in the jupyter notebook.
+
+{c: get_oob(xs_train_imp.drop(c, axis=1)) for c in ('saleYear', 'saleElapsed', 'ProductGroupDesc','ProductGroup',
+    'fiModelDesc', 'fiBaseModel',
+    'Hydraulics_Flow','Grouser_Tracks', 'Coupler_System')}
+
+
+
+# Set all elements less than 1950 to 1950 in YearMade:
+
+df.loc[df.YearMade<1950, 'YearMade'] = 1950
+
+
+#  Grab a bunch of random indexes or
+
+valid_idx = np.random.randint(842, size=(int(841/3)))
+len(valid_idx)
+
+note: what I actually used whas this:
+
+from sklearn.model_selection import train_test_split
+# separate valid and train rows
+xs_train, xs_valid, y_train, y_valid = train_test_split(df, df.Survived, test_size=0.33, random_state=42)
+
+
+
+## From 10_nlp FAst.AI ##
+how to see as much of a text as you'd like.  
+this shows the first 75 characters of  text element
+
+txt = files[0].open().read(); txt[:75]
+
+    'This movie, which I just discovered at the video store, has apparently sit '
+
+# For Fast.AI homphobia project #
+How to turn each element in a dataframe into individual .txt files for learning purposes:
+
+## So.. super inefficient, but this worked perfectly.  weird, but worked:
+# note: also consider itertuples() instead to preserve data types.
+
+i = 0
+for index, row in df.iterrows():
+    if i>len(df.col):
+        break
+    else:
+        f = open( str(i) + '.txt', 'w', encoding='utf-8')
+        f.write(row[0])
+        f.close()
+        i+=1
+
+
+# how to move files by opening bash in jupyter notebooks:
+!pwd
+!mv 9*.txt /notebooks/Homophobia
+
+
+## Jupyter notebook file moving 
+
+
+# create index lists for positive and negative stuff from the df readdit
+cond = readdit.homophobic==1
+neg_idx = np.where(cond)[0]
+pos_idx = np.where(~cond)[0]
+neg_idx[0]
+
+# save the path to all the text files you want to sort
+pos_path = Path('/notebooks/homophobia/train/pos')
+
+# Make a list of all the paths to the text files
+poses = get_text_files(pos_path)
+
+#turn your numpy list from neg_idx to a string so it can be compared with your o.stem
+negstr = [str(n) for n in neg_idx]
+
+#re-path all text files in the 'pos' folder to be in the 'neg' folder if they are in the neg_idx list
+
+for o in poses:
+    if o.stem in negstr:
+        npath = o.parent.parent / 'neg' / o.name
+        o.replace(npath)
+        
+# Check to make sure the folders moved correctly 
+!ls /notebooks/homophobia/train/neg
+
+
+## used this to actually move text files around to train and valid folders:
+
+negstrings = [str(o) for of in neg_idx] #turn numpy int64 o strings
+
+test_path = Path('/notebooks/homophobia/test/')  #save the path
+missing_text_files_paths = get_text_files(test_path)  #get all text files
+
+for p in missing_text_files_paths:
+    if p.stem in negstrings:
+        #rename paths if the .stem is in the 'negstrings' list
+        newest_path = p.parent.parent / 'train'/'neg'/p.name  
+        p.replace(newest_path)
+    else:
+        #resave all other paths to the other folder
+        newest_path = p.parent.parent / 'train'/'pos'/p.name  
+        p.replace(newest_path)
+
+
+
+## Path notes:
+https://realpython.com/python-pathlib/#moving-and-deleting-files
+
+
+from pathlib import Path
+
+
+>>> path
+PosixPath('/home/gahjelle/realpython/test.md')
+>>> path.name
+'test.md'
+>>> path.stem
+'test'
+>>> path.suffix
+'.md'
+
+>>> path.parent
+PosixPath('/home/gahjelle/realpython')
+>>> path.parent.parent
+PosixPath('/home/gahjelle')
+>>> path.anchor
+'/'
+
+
+
+## show file tree
+
+def tree(directory):
+    print(f'+ {directory}')
+    for path in sorted(directory.rglob('*')):
+        depth = len(path.relative_to(directory).parts)
+        spacer = '    ' * depth
+        print(f'{spacer}+ {path.name}')
+
+>>> tree(pathlib.Path.cwd())
++ /home/gahjelle/realpython
+    + directory_1
+        + file_a.md
+    + directory_2
+        + file_a.md
+        + file_b.pdf
+        + file_c.py
+    + file_1.txt
+    + file_2.txt
+
+
+
+# Used to check number of files in directories in jupyter notbooks:
+
+!ls /notebooks/homophobia_kaggle/train/neg | wc -l
+
+# Remove directory dir and everything in it:
+!rm ../homophobia_tok -r
+
+#Linux stuff somewhere in the middle look up "mv"
+
+
+# to turn any elements null that are over 3x the standard deviation of the rest of the column use this:
+# did this for ariel  aeriel
+ndf = adf[np.abs(adf - adf.mean()) <= (3 * adf.std())]
+
+##Used to sum homohobia columns:
+    k['sum_col'] = k[['toxic', 'severe_toxic', 'obscene', 'threat',
+       'insult', 'identity_hate']].sum(axis=1)
+
+# workds to concatenate dfs
+## Used to add append duplicate replicate df rows:
+    new_df = df[ df['sum_col'] > 0 ]
+    df.append( [new_df] * 5, ignore_index=True)
+
+#here repeaded_rows is a df appended to dfr_one:
+    dfx = dfr_one.append(repeated_rows)
+
+
+Used to filter df by list of words using .contains() and regex:
+
+insults = ['gay', 'fag','queer', 'bugger', 'cock sucker','fαg','homo','hermaphrodite','lesbian', 'lez','closet']
+hates = hates[hates['comment_text']\
+              .str.lower().str.contains('|'.join(insults))]
+
+
+# Label rows that contain text from a list:
+
+df = df.loc[df.species.str.contains('cat|dog'), :]
+
+    or
+
+
+
+
+# how to speed up fastai?  maybe try these things on this page:
+https://github.com/fastai/fastai/issues/2812
+
+or look here:
+
+https://forums.fast.ai/t/slow-dataloader-with-character-tokenizer/86552/4
+
+
+## slick way of using numpy np.where() to do things with indexes and conditions or conds or cond
+
+cond = (df.saleYear<2011) | (df.saleMonth<10)
+train_idx = np.where( cond)[0]
+valid_idx = np.where(~cond)[0]
+
+splits = (list(train_idx),list(valid_idx))
+
+
+    ## Real Example: use to drop unwanted rows:
+
+    cond = (df.full_retweet_txt.str.contains('|'.join(o for o in posh))) & (df.full_retweet_txt.str.contains('|'.join(o for o in negh)))
+
+
+    dropers = list(np.where(cond)[0])
+    df = df.drop(dropers)
+
+
+
+
+## Used this for filtering data frame with specific text:
+
+
+## Shufle the row orders note: axis=1 would shuffle the columns I thingk
+
+df.reindex(np.random.permutation(df.index))
+
+
+
+This is useful for creating new columns:
+
+    np.where(condition, value if condition is true, value if condition is false)
+
+    df['hasimage'] = np.where(df['photos']!= '[]', True, False)
+
+
+
+# Used to create new column:
+# create your list of words to find
+insults = ['gay', 'fag','queer', 'bugger','fαg','homo','hermaphrodite','lesbian', 'lez','closet']
+
+# create your conditions for everything
+cond = (k.identity_hate==1) & (k.comment_text.str.lower().str.contains('|'.join(o for o in insults)))
+
+# create the column and place with either a 1 or a zero 
+k['homp'] = np.where(cond, 1,0)
+
+
+# example from abortion politics thing using & and | :
+    cond = ((val.dpolarity<0) & (val.polarity<0)) | ((val.dpolarity>0) & (val.polarity>0))
+    val['correct'] = np.where(cond, 1,0)
+
+# Used to shuffle rows:
+    sabh = abh.reindex(np.random.permutation(abh.index))
+
+
+## command line bash: good for search and find:
+!find / -name grizzly.jpg -print
+
+
+# Text Clasifier Fastai example from someone:
+https://github.com/dhamvi01/Fast.ai-Text-Classification/blob/main/Fast_ai_Text_Classification.ipynb
+
+
+
+Twitter data:
+Best of: https://imerit.net/blog/top-25-twitter-datasets-for-natural-language-processing-and-machine-learning-all-pbm/
+
+
+top accounts
+https://dataverse.harvard.edu/dataset.xhtml?id=3047332
+
+sentiment from a kaggler:
+https://www.kaggle.com/shashank1558/preprocessed-twitter-tweets?select=processedPositive.csv
+
+
+
+## Tweepy Tutorial:
+    # use this in jupyter notebooks to run a different notebook in the same directory:
+    %run ./tweepy_passwds.py    
+
+    # use this to find the five largest in a df column:
+     mostlike = df.loc[df.likes.nlargest(5).index]
+     print(mostlike)
+
+    # had to load a specific packaged from spaCy to get it to work:
+    !python3 -m spacy download en_core_web_lg
+
+    # great easy way to count the numbers of things 
+    df2 = df2[0].value_counts()
+
+    #great shortcut for putting soemthing in quotes:
+    hightlight word + ' or "
+
+    # simple way to filter df:
+    df8 = df6.where(df6['Entity'] == 'PERSON')
+
+
+# Tweepy Search operators:
+https://developer.twitter.com/en/docs/twitter-api/v1/tweets/search/guides/standard-operators
+
+Standard search operators
+The query can have operators that modify its behavior.  Below are examples that illustrate the available operators in standard search:
+
+Operator	Finds Tweets...
+watching now	containing both “watching” and “now”. This is the default operator.
+“happy hour”	containing the exact phrase “happy hour”.
+love OR hate	containing either “love” or “hate” (or both).
+beer -root	containing “beer” but not “root”.
+#haiku	containing the hashtag “haiku”.
+from:interior	sent from Twitter account “interior”.
+list:NASA/astronauts-in-space-now	sent from a Twitter account in the NASA list astronauts-in-space-now
+to:NASA	a Tweet authored in reply to Twitter account “NASA”.
+@NASA	mentioning Twitter account “NASA”.
+politics filter:safe	containing “politics” with Tweets marked as potentially sensitive removed.
+puppy filter:media	containing “puppy” and an image or video.
+puppy -filter:retweets	containing “puppy”, filtering out retweets
+puppy filter:native_video	containing “puppy” and an uploaded video, Amplify video, Periscope, or Vine.
+puppy filter:periscope	containing “puppy” and a Periscope video URL.
+puppy filter:vine	containing “puppy” and a Vine.
+puppy filter:images	containing “puppy” and links identified as photos, including third parties such as Instagram.
+puppy filter:twimg	containing “puppy” and a pic.twitter.com link representing one or more photos.
+hilarious filter:links	containing “hilarious” and linking to URL.
+puppy url:amazon	containing “puppy” and a URL with the word “amazon” anywhere within it.
+superhero since:2015-12-21	containing “superhero” and sent since date “2015-12-21” (year-month-day).
+puppy until:2015-12-21	containing “puppy” and sent before the date “2015-12-21”.
+movie -scary :)	containing “movie”, but not “scary”, and with a positive attitude.
+flight :(	containing “flight” and with a negative attitude.
+traffic ?	containing “traffic” and asking a question.
+Please, make sure to URL encode these queries before making the request. There are several online tools to help you to do that, or you can search at twitter.com/search and copy the encoded URL from the browser’s address bar. The table below shows some example mappings from search queries to URL encoded queries:
+
+
+
+Search query	URL encoded query
+#haiku #poetry	%23haiku+%23poetry
+“happy hour” :)	%22happy%20hour%22%20%3A%29
+Note that the space character can be represented by “%20” or “+” sign.
+
+twitter searches used:
+#vagov -from:GlennYoungkin -from:terrymcauliffe    all hashtag #vagov without the candidates.  note: no @ sign
+
+
+# Presidential debate slick things:
+
+lambda through a df 
+def preprocess_tweets(tweet, custom_stopwords):
+    preprocessed_tweet = tweet
+    preprocessed_tweet.replace('[^/w/s]', '')
+    preprocessed_tweet = " ".join(word for word in preprocessed_tweet.split() if word not in stop_words)
+    preprocessed_tweet = " ".join(word for word in preprocessed_tweet.split() if word not in custom_stopwords)
+    preprocessed_tweet = ' '.join(Word(word).lemmatize() for word in preprocessed_tweet.split())
+    return(preprocessed_tweet)
+    
+df['processed_tweet'] = df['text'].apply(lambda x: preprocess_tweets(x, custom_stopwords))
+
+Calculate sentiment:
+df['polarity'] = df['processed_tweet'].apply(lambda x: TextBlob(x).sentiment[0])
+df['subjectivity'] = df['processed_tweet'].apply(lambda x: TextBlob(x).sentiment[1])
+
+
+# create rolling average with pandas:
+        note: this creates a 10 tweet moving average with a minimum of 3 tweets to start
+    dbiden['MA Polarity'] = biden['polarity'].rolling(10, min_periods=3).mean()
+
+
+
+# cool way fo groupby or aggregating:
+display(df[df['trump']==1][['trump', 'polarity','subjectivity']].groupby('trump')\
+                        .agg([np.mean, np.max, np.min, np.median]),                     
+df[df['biden']==1][['biden', 'polarity','subjectivity']].groupby('biden')\
+                        .agg([np.mean, np.max, np.min, np.median])                                      
+       )
+
+
+# Good tweepy article for Streaming tweets:
+https://towardsdatascience.com/real-time-twitter-sentiment-analysis-for-brand-improvement-and-topic-tracking-chapter-1-3-e02f7652d8ff
+
+# Show entire string in jupyter notebook display:
+
+    pd.options.display.max_rows
+    pd.set_option('display.max_colwidth', -1)
+
+#use .unique() to see all unique entries in pandas df 
+
+
+
+# Creating a df from tweepy tweets  good way to create df from all columns available:
+columns = set()
+allowed_types = [str, int]
+tweets_data = []
+# test cursor for 1 tweet
+for status in  cursor:
+    status_dict = dict(vars(status))
+    keys = vars(status).keys()
+    single_tweet_data = {}
+    for k in keys:
+        try:
+            v_type = type(status_dict[k])
+        except:
+            v_type = None
+        if v_type != None:
+            if v_type in allowed_types:
+                single_tweet_data[k] = status_dict[k]
+                columns.add(k)
+    tweets_data.append(single_tweet_data)
+
+header_cols = list(columns)
+
+# Turning tensors into lists:
+
+    the_tensor.tolist()
+# to flatten a tensor and get all the values:
+    the_tensor.flatten(.tolist())
+
+#Count all values shown in an entire df 
+df.apply(pd.Series.value_counts, normalize=True)
+
+#Count all values in a column
+df.colname.value_counts()
+
+
+## expand the lists inside a column out into its own dataframe
+# expand all lists of all hastags into df for counting
+df2 = pd.DataFrame(dfn['regex'].values.tolist())
+
+
+
+# import list of csv's to concat:
+
+    import pathlib2 as pl2
+
+    # concat all csvs
+    path = pl.Path('/notebooks/clean/Tutorials') # save your dir path
+
+    myf = [pl.Path(path/pl.Path(f)) for f in files] # create list of paths for all files
+
+    dfs = [pd.read_csv(p) for p in myf] #load all csvs quickly
+
+    df = pd.concat(dfs) #concat all quickly
+    
+
+
+df.set_index('timestamp', drop=True)
+
+
+# Create convert columns with days or hours instead of exact time from timestamp:
+note: automatically works with datetime
+
+    df.timestamp = pd.to_datetime(df.timestamp)
+    df['hour'] = df.timestamp.dt.to_period('H')
+    df['day'] = df.timestamp.dt.to_period('D')
+
+
+# create a simgle plot using pandas .plot().  
+note: make sure you .set_index('timestamp') or something like that.
+
+    fig, axs = plt.subplots(figsize=(12,4))
+    dfx.plot()
+
+# create multiple plots from the same df
+
+    #turn to string cause its stupid and must be put back into normal datetime insted of 'hour' period.
+    dfxc.hour = dfxc.hour.astype('str') 
+    dfxc.hour = pd.to_datetime(dfxc['hour'])
+
+    fig, axes = plt.subplots(2,1, figsize=(14,10))
+    axes[0].plot(dfxc['hour'], dfxc['MA Polarity'])
+    axes[0].set_title("\n".join(['Recall Polarity']))
+    axes[1].plot(dfxc['hour'],dfxc['id'])
+    axes[1].set_title("\n".join(['Tweets per Hour']))
+    plt.show()
+
+
+    # slick way of finding probability of a speciic thing:
+        rate_est_samples = [...] # list of a specific number of(n_samples) elements thata are numbers
+        sum(rate_est_samples > 0.4)/n_samples
+        --> 0.1629 # all only samples larger than .4 divided by total is the probability of those samples.
+
+#Pandas regex used for recall gavin newsom:
+
+rx = r'#\w*' # get all hashtags
+df['regex'] = df.full_retweet_txt.str.findall(rx) #use findall() to save your regex as a separate column
+df['regex'][:10] # check the first 10 entries of the new columm
+
+
+df2 = pd.DataFrame(df['regex'].values.tolist())
+df2 = df2.stack(dropna=True)
+df2.value_counts()
+
+
+#DAily number of tweets:
+    192k @ 8k per hour
+
+
+# sum(list) is the sum of all the trues in a list.  AWESome!!
+
+    a_boolean_list = [True, False, True, False, False, True]
+
+    true_count = sum(a_boolean_list)
+    ---> 3
+
+
+Stats:  a point estimate:  if 2 people buy out of 4 people. a point esitmate is that there is .5 chance of someone buying
+
+
+Plot coin tosses using sns seaborn
+
+sns.barplot(x=[0,1,2,3,4],
+            y=five_tosses_dist.pmf([0,1,2,3,4]),
+            color='blue').set_title('Binomial Distribution, n=5, p=1/4')
+
+
+
+
+
+## Auto update .format() or f' for a list:
+# also unpack the list in a cool way
+# list of all hashtags to search
+    all_vagov_hashts = ['winwithglenn',
+        'glenntrumpkin',
+        'voteyoungkin',
+        'vagov',
+        'parentsforyoungkin',
+        'teamyoungkin',
+        'teamterry',
+        'mcauliffedelivers']
+
+    #create your string to insert into the query for format substitutions so it automatically updates if the list gets longer
+    hashstring = ['#{'+str(x)+'} OR' for x in range(len(all_vagov_hashts) -1)]
+    query_string = ''
+    for x in hashstring:  query_string = query_string +' '+ str(x)
+    query_string = query_string + ' #{'+str(len(all_vagov_hashts)-1)+'}'
+    query_string
+
+    # Search
+    hashtags = all_vagov_hashts
+
+    pre_query = f'{query_string} OR terrymcauliffe OR glennyoungkin OR mcauliffe OR youngkin -from:glennyoungkin -from:terrymcauliffe'
+    query = pre_query.format(*hashtags)
+    num_tweets = 2000
+    query
+
+
+#cool way to see the worst hashtags:
+df2[(df2<.005) & (df2>.003)]
+
+#min retweets
+pre_query = f'{query_string} min_retweets:1000'
+
+# row does not contain 'bill' but DOES contain 'trillion'
+
+# used this try: and except: to no throw a giant error when there are no downloads:
+    df = extract_df(limit_handled(tweepy.Cursor(api.search, q=query,tweet_mode='extended',lang='en').items(num_tweets)))
+    df_full = df
+    try:
+        df = df[['timestamp','full_retweet_txt', 'retweet_count','id', 'user','location']]
+    except:
+        pass
+    df.tail(1)
+
+# datetime now for csv saving:  this saves x as a string of the day.
+    
+    import datetime
+    x = str(datetime.datetime.now().date())
+    x
+    --->'2021-10-09'
+
+    other version:
+    x = str(datetime.datetime.now().time())
+    x
+    ---> '13:15:21.060403'
+
+
+# crontab or you might type chrontab:
+
+#open it in terminal -vim:
+crontab -e
+
+# check your crontabs:
+crontab -l
+
+# using vim:
+i  to start typing
+esc to stop typing
+:wq  once escaped this will write and save what you typed in vim
+
+# check you crontab code:
+    www.crontab.guru
+
+
+
+BASH COMMAND LINE SHELL terminal:
+
+# delet all mail from crontab:
+~ mail
+~ delete *
+~ q
+q
+type help for help
+
+
+# activate your envelope:
+    conda activate myenv
+
+    or
+
+    conda deactivate    
+
+# install
+conda install numpy
+
+#list
+conda list
+
+#search
+conda search pandas
+
+
+##
+Mail Command               Description
+-------------------------  --------------------------------------------
+t [message list]           type message(s).
+n                          goto and type next message.
+e [message list]           edit message(s).
+f [message list]           give head lines of messages.
+d [message list]           delete message(s).
+s [message list] <file>    append message(s) to file.
+u [message list]           undelete message(s).
+R [message list]           reply to message sender(s).
+r [message list]           reply to message sender(s) and all recipients.
+p [message list]           print message list.
+pre [message list]         make messages go back to /var/mail.
+m <recipient list>         mail to specific recipient(s).
+q                          quit, saving unresolved messages in mbox.
+x                          quit, do not remove system mailbox.
+h                          print out active message headers.
+!                          shell escape.
+| [msglist] command        pipe message(s) to shell command.
+pi [msglist] command       pipe message(s) to shell command.
+cd [directory]             chdir to directory or home if none given
+fi <file>                  switch to file (%=system inbox, %user=user's
+                           system inbox).  + searches in your folder
+                           directory for the file.
+set variable[=value]       set Mail variable.
+
+
+
+
+
+
+## Used to publish seaborn sns bar graph for va tweets auto update: from update graph post:
+https://www.freecodecamp.org/news/how-to-create-auto-updating-data-visualizations-in-python-with-matplotlib-and-aws/
+
+    import seaborn as sns
+    import matplotlib.pyplot as plt
+
+    # Set the width and height of the figure
+    plt.figure(figsize=(8,6))
+
+    # Add title
+
+    # Bar chart showing average arrival delay for Spirit Airlines flights by month
+
+    ax = sns.barplot(x=df2, y=df2.index)
+
+    #title
+    ax.set_title(f'Most Popular Hashtags: Daily Va Governors Race:   {tdate}')
+
+    # Add label for  axis
+    ax.set(xlabel='Relative Percentage of Hashtags Used')
+    
+
+    ################################################
+    #Save the figure to our local machine
+    ################################################
+    plt.tight_layout()
+    plt.savefig('va_hashtags.png',bbox_inches="tight")
+
+
+## Two ways to filtery by number of entries in a list that is in a row element (va Governors tweets)
+
+    df[df.regex.str.len()>10]
+
+or
+
+    import numpy as np
+    df.loc[np.array(list(map(len,df.regex.values)))>1]
+
+# turn index of a series or df into a list:
+
+    all_hashtags = df2.index
+
+
+
+# Good site for statistics and probabilities:
+
+https://math.libretexts.org/Bookshelves/Applied_Mathematics/Book%3A_College_Mathematics_for_Everyday_Life_(Inigo_et_al)/03%3A_Probability/3.02%3A_Combining_Probabilities_with_And_and_Or
+
+# cool premier league statistics and probabilities:
+https://towardsdatascience.com/the-premier-league-so-far-5bf1d95afbc8
+
+
+Use .isin() to filter dataframe rows onn a list of values: https://datascienceparichay.com/article/filter-dataframe-on-list-of-values/
+
+df_filtered = df[df['Col1'].isin(allowed_values)]
+
+
+
+## From TheScientistWhoStayed ##
+
+# HIS Model Loading
+
+from fastai.text.all import *
+from fastai.text.learner import language_model_learner
+from fastai_ulmfit.pretrained import *
+url = 'http://bit.ly/ulmfit-dewiki'
+tok = tokenizer_from_pretrained(url)
+learn = language_model_from_pretrained(dls_lm, 
+                                       url=url, 
+                                       drop_mult=1, 
+                                       metrics=[Perplexity(), 
+                                                accuracy],
+                                       wd=0.1, 
+                                       path=path2, 
+                                       backwards=True,
+                                      )
+learn_clas = text_classifier_learner(dls_clas, 
+                                AWD_LSTM, 
+                                drop_mult=1, 
+                                metrics=[rmse], 
+                                path=path2,
+                               )
+# training goes here...
+# training completed
+
+## His Infernce Prediciton Preds:
+
+
+# Use .export() instead of .save()
+# save into /models/awd_lstm_fully_trained_export
+learn_clas.export('awd_lstm_fully_trained_export')
+
+##
+from fastai.text.all import *
+import pandas as pd
+from pathlib import Path
+
+df_test = pd.read_csv('path/to/new_dataset.csv') # the text to predict on is in the `excerpt` header.
+
+def get_learner_for_inference(export_model_path: str):
+    learn    = load_learner(export_model_path)
+    # ensure learner is loaded on gpu cuda
+    learn.dls.cuda()
+    
+    print(f'Learner stored on {learn.dls.device.type}')
+    return learn
+
+
+def get_preds_from_series(s: pd.Series, learner: Learner):
+    # test_dl creates a new testing DataLoader 
+    # using the pd.Series of text inputs
+    dl_test   = learner.dls.test_dl(s)
+    preds     = learner.get_preds(dl=dl_test)
+    
+    return preds[0].numpy().flatten()    
+
+learn, dls_clas = get_learner_for_inference('/path/to/awd_lstm_fully_trained_export')
+
+preds = get_preds_from_series(s        = df_test.excerpt,
+                              learner  = learn,
+                              )
+
+preds
+
+'''
+RESULT:
+Learner stored on cuda
+
+array([-1.099862  , -0.07779016, -0.31440812, -1.9729153 , -1.589001  ,
+       -1.4138943 , -0.6368377 ], dtype=float32)
+'''
+
+
+
+
+# used to bring timestamp to day or hour:
+df.timestamp = pd.to_datetime(df.timestamp)
+df['hour'] = df.timestamp.dt.to_period('H')
+df['day'] = df.timestamp.dt.to_period('D')
+
+# Used to look a top five individual tweets from  a large dataframe
+for o in df.sort_values(['retweet_count'])[:5].full_retweet_txt:
+    print ('-' + o)
+
+
+# Use this to sort ls by time and date recent files or csvs:
+
+ls -t *.csv
+
+#use this to insert website into markdown:
+
+    ### The functions were copied from Matthew SF Choo's article [HERE](https://scientistwhostayed.medium.com/making-nlp-predictions-on-new-datasets-using-fast-ai-4a9be5e07ba1)
+
+
+## Real Clear Politics Aggregtor from terminal
+
+    rcp http://www.realclearpolitics.com/epolls/2016/president/us/general_election_trump_vs_clinton-5491.html --output general.csv
+    rcp https://www.realclearpolitics.com/epolls/2021/governor/va/virginia_governor_youngkin_vs_mcauliffe-7373.html --output general.csv
+
+    rcp https://www.realclearpolitics.com/epolls/2021/governor/va/virginia_governor_youngkin_vs_mcauliffe-7373.html --output general.csv
+
+
+
+
+
+# Ron Pacanowski NOtes
+
+# BASH notes:
+# jumps back to previous directory
+cd - 
+
+.bashrc
+
+# Fast editor:
+
+bearbones editor 
+
+
+--
+
+# used to get bautiful soup to work when it was returning 403 error.
+# note: it needs a header to look like a browser.  so save header and headers = headers
+# import requests
+
+headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.76 Safari/537.36'} # This is chrome, you can set whatever browser you like
+response = requests.get('https://www.realclearpolitics.com/epolls/2021/governor/va/virginia_governor_youngkin_vs_mcauliffe-7373.html', headers=headers)
+
+print(response.status_code)
+print(response.url)
+
+# 200 
+# http://www.rlsnet.ru/search_result.htm?word=%D6%E5%F0%E5%E1%F0%EE%EB%E8%E7%E8%ED
+
+
+
+#here repeaded_rows is a df appended to dfr_one:
+    dfx = dfr_one.append(repeated_rows)
+
+
+## cumcount to enumerate groups in a df
+
+# create a column by enumerating over each poll repition. to get all the dates of the poll
+https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.core.groupby.GroupBy.cumcount.html
+dfr['poll_day'] = dfr.groupby('index').cumcount()
+
+    #this is essentially the same as :
+        self.apply(lambda x: pd.Series(np.arange(len(x)), x.index))
+        or 
+        df['newcol'] = df.groupby('col1').apply(lambda x: pd.Series(np.arange(len(x), x.index)))
+
+
+
+
+# df_test = add_datepart(df_test, 'saledate')
+dfr = add_datepart(dfr, 'end')
+dfr = add_datepart(dfr, 'start')
+
+
+# quick graph of a simple df
+    import seaborn as sns
+    sns.lineplot(y=dfrd.polarity, x=dfrd.rdate)
+
+
+## Sleek Moving Average MA Polarity way to create graphing function from kaggle person:
+
+    import datetime
+    import matplotlib.pyplot as plt
+    %matplotlib inline
+
+    def show_ma_chart(df):
+        ma1=75
+        ma2=100
+        
+        ma_1 = pd.Series.rolling(df.Price, window=ma1).mean()
+        ma_2 = pd.Series.rolling(df.Price, window=ma2).mean()
+    
+        xdate = [x for x in df.index]
+    
+        plt.figure(figsize=(15,5))
+        plt.style.use('ggplot')
+    
+        plt.plot(xdate, df.Price, lw=1, color="black",label="Price")
+        plt.plot(xdate, ma_1,lw=3,linestyle="dotted", label="Moving Average {} days".format(ma1))
+        plt.plot(xdate, ma_2,lw=3,linestyle="dotted", label="Moving Average {} days".format(ma2))
+        plt.legend(loc='best')
+        plt.xlabel('Date')
+        plt.ylabel('Price')
+        xmin = df.index[0]
+        xmax = df.index[-1]
+        plt.title("Cushing_OK_WTI_Spot_Price_FOB ({0} to {1})".format(xmin.date(),xmax.date()))
+        plt.ylim(0, 100)
+        plt.xlim(xmin, xmax)
+        plt.show()
+
+
+
+    # Prepare dataset
+    # The U.S. Energy Information Administration (EIA)
+    df = pd.read_csv("../input/cushing-ok-wti-spot-price-fob/Cushing_OK_WTI_Spot_Price_FOB.csv", header=4, parse_dates=[0],index_col=[0],names=["Date","Price"])
+    df.sort_index(inplace=True)
+
+    # Show Moving Average
+    show_ma_chart(df['2015-01-01':])
+    show_ma_chart(df['2019-01-01':])
+
+
+
+## Great NYT Article on polling and differences
+https://www.nytimes.com/interactive/2016/09/20/upshot/the-error-the-polling-world-rarely-talks-about.html
+
+## Fill in Na or null or NaN or NaT values in df for plot:
+#pd.DataFrame
+df['a_col_ffill'] = df['a_col'].ffill()
+df['b_col_ffill'] = df['b_col'].ffill()  # changed from a to b
+df[['a_col_ffill','b_col_ffill']].plot()
+
+
+# create a single column df
+df[['col']] will return a DataFrame. df['col'] will return a Series
+
+
+# Horizontal line at 0
+plt.hlines(y= 0,  xmin=xmin, xmax=xmax,color='red', linestyle ='dashed', linewidth = 4)
+https://pythonguides.com/horizontal-line-matplotlib/
+
+
+
+# convert timestamp to datetime
+# note: watch out for dailight savings time.  
+df['timestamp'] = pd.to_datetime(df.timestamp)
+# create a CA time column
+df['ca_time'] = df['timestamp'] - pd.Timedelta('7 hours')
+
+# convert time from London time to VA time
+df['timestamp'] = df['timestamp'] - pd.Timedelta('4 hours')
+
+
+#RSME - root mean squared error
+
+def rmse(predictions, targets):
+    return np.sqrt(((predictions - targets) ** 2).mean())
+
+# or
+
+#create df without any days missing so you can don rmse
+cdf = df[~df.dailyPolarityRCP_rpol.isnull()]
+#use scikitlearn mse function
+mean_squared_error(cdf.dailyPolarityRCP_rpol, cdf.dailyMaPolarityVa_bpol_ffill,squared=False)
+
+# or R-squared
+
+r2_score(cdf.dailyPolarityRCP_rpol, cdf.dailyMaPolarityVa_bpol_ffill)
